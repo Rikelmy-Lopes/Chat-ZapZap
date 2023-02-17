@@ -1,17 +1,23 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",
-    "rootDir": ".",
     "target": "es2019",
-    "module": "commonjs",
-    "typeRoots": [
-      "src/@types",
-      "./node_modules/@types"
-    ],
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
+    "module": "CommonJS",
+    "sourceMap": false,                     
+    "outDir": "./build/src",
+    "rootDir": "./src",
     "strict": true,
-    "skipLibCheck": true
+    "moduleResolution": "node",
+    "baseUrl": ".", 
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "paths": {
+      "*": ["node_modules/*"]
+    }
   },
-  "exclude": ["node_modules"]
+  "include": ["src/**/*"],
+  "exclude": ["src/tests"]
 }

@@ -1,11 +1,14 @@
 {
   "name": "chat-zapzap",
   "version": "1.0.0",
+  "type": "commonjs",
   "description": "",
-  "main": "src/server.js",
+  "main": "./build/server.js",
   "scripts": {
-    "test": "npm test",
-    "dev": "tsnd src/server.ts"
+    "start": "rm -rf ./build && tsc --project tsconfig.json && node build/src/server.js",
+    "dev": "tsnd src/server.ts",
+    "build": "tsc --project tsconfig.json",
+    "test": "npm test"
   },
   "repository": {
     "type": "git",
@@ -18,10 +21,15 @@
   },
   "homepage": "https://github.com/Rikelmy-Lopes/Chat-ZapZap#readme",
   "dependencies": {
-    "express": "^4.18.2"
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "socket.io": "^4.6.0"
   },
   "devDependencies": {
+    "@types/ejs": "^3.1.2",
     "@types/express": "^4.17.17",
+    "@types/socket.io": "^3.0.2",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
     "@typescript-eslint/parser": "^5.52.0",
     "eslint": "^8.34.0",
