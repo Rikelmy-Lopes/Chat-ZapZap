@@ -4,23 +4,20 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="http://192.168.0.189:3001/style.css">
 
     <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
     <title>Chat ZapZap</title>
 </head>
 <body>
-    <input id="input-number" type="text" placeholder="Digite seu Numero">
+    <h2>Contatos</h2>
+    <input placeholder="Nome do Usuário" type="text" name="" id="contact-name">
+    <input placeholder="Numero de Telefone" type="number" name="" id="contact-number">
+    <button id="add-contact">Adicionar Contato</button>
+    <br>
+    <div id="contacts">
 
-    <button id="save">Salvar Usuário</button>
-
-    <script type="text/javascript">
-        const socket = io('http://localhost:3001/')
-        const button = document.getElementById('save')
-
-        // button.addEventListener('click', () => {
-        //     const phone = document.getElementById('input-number').value
-        //     socket.emit('saveUser', phone)
-        // })
-    </script>
+    </div>
+    <script src="http://192.168.0.189:3001/script.js"></script>
 </body>
 </html>

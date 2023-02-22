@@ -13,25 +13,64 @@
     <span>Messages: </span>
 
     </div>
-    <input placeholder="mensagem" id="message" type="text">
-    <input placeholder="numero da pessoa" id="personNumber" type="text">
+    <input placeholder="mensagem" id="message" value="" type="text">
     <button id="button">Enviar</button>
 
     <script type="text/javascript">
-        const socket = io('http://localhost:3001/')
+        const socket = io('http://192.168.0.189:4000/')
 
-        document.getElementById('button').addEventListener('click', () => {
-            const phone1 = window.location.pathname.replace(/[^0-9]/g,'');
-            const phone2 = document.getElementById('personNumber').value
-            const message = document.getElementById('message').value;
-            
-            socket.emit('message', { phone1, phone2, message })
-
+        socket.on('roomId', (roomId) => {
+          localStorage.setItem('roomId', roomId)
         })
 
-        socket.on('message-receive', (message) => {
+        socket.on('message-receive-buck', (messages) => {
+          const divMessage = document.getElementById('messages')
+          divMessage.innerHTML = ''
+          messages.forEach((message) => divMessage.innerHTML += `<p> ${ message } </p>`)
+        })
+
+    function separarNumeros(str) {
+      const numeros = str.match(/\d+/g); // encontra todos os números na string
+      if (numeros && numeros.length === 2) { // se houver exatamente 2 números
+        const obj = {
+        me: numeros[0], // o primeiro número é o 'me'
+        chatWith: numeros[1] // o segundo número é o 'chatWith'
+    };
+      return obj;
+  } else {
+    throw new Error("A string não contém exatamente dois números.");
+  }
+}
+
+        window.onload = () => {
+          const { me, chatWith } = separarNumeros(window.location.pathname)
+          socket.emit('chat-open', { phone1: me, phone2: chatWith })
+        }
+
+
+        document.getElementById('button').addEventListener('click', () => {
+            const message = document.getElementById('message').value;
+            const roomId = localStorage.getItem('roomId')
+            socket.emit('message', { message, roomId })
+            document.getElementById('message').value = ''
+        })
+
+        document.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            const message = document.getElementById('message').value;
+            const roomId = localStorage.getItem('roomId')
+            socket.emit('message', { message, roomId })
+            document.getElementById('message').value = ''
+          }
+
+          return
+        })
+
+        socket.on('message-receive', (messages) => {
         const divMessage = document.getElementById('messages')
-        divMessage.innerHTML += `<p> ${ message } </p>`
+        divMessage.innerHTML = ''
+        messages.forEach((message) => divMessage.innerHTML += `<p> ${ message } </p>`)
+        // divMessage.innerHTML += `<p> ${ message } </p>`
         })
     </script>
 </body>

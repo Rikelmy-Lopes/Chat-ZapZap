@@ -6,7 +6,7 @@
   "main": "./build/server.js",
   "scripts": {
     "start": "rm -rf ./build && tsc --project tsconfig.json && node build/src/server.js",
-    "dev": "tsnd src/server.ts",
+    "dev": "tsnd src/webSockets.ts",
     "build": "tsc --project tsconfig.json",
     "test": "npm test"
   },
