@@ -1,6 +1,6 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('user_message', {
+    await queryInterface.createTable('user_messages', {
       user_id: {
         allowNull: false,
         primaryKey: true,
@@ -19,7 +19,7 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
         references: {
-          model: 'users_room',
+          model: 'users_rooms',
           key: 'room_id',
         }
       },
@@ -36,6 +36,6 @@ module.exports = {
   },
         
   down: async (queryInterface) => {
-    await queryInterface.dropTable('user_message');
+    await queryInterface.dropTable('user_messages');
   },
 };

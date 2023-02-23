@@ -1,6 +1,9 @@
 import app from './app';
 import os from 'os';
 import 'dotenv/config';
+import UsersModel from './database/model/UsersModel';
+import UsersRoomModel from './database/model/UsersRoomModel';
+import UserMessage from './database/model/UserMessage';
 const users: any = [
   {
     name: 'Rikelmy Lps',
@@ -39,6 +42,16 @@ app.get('/me/:phone1/chatWith/:phone2', (req, res) => {
   return;
   // }
   // res.status(404).json({ message: 'User Not Found'});
+});
+
+app.get('/test', async (req, res) => {
+  const data = await UserMessage.findAll({
+    include: [
+      { model: UsersModel, as: 'user' },
+      { model: UsersRoomModel, as: 'room' }
+    ]
+  });
+  res.status(200).json(data);
 });
 
 let ip : string;
