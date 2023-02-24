@@ -24,7 +24,12 @@ class UserController {
     return this.response.status(200).json(result);
   }
 
-  
+  public validateToken() {
+    const { token } = this.request.body;
+    const { error } = this.service.validateToken(token);
+    if (error) return this.response.status(403).json({ message: 'Invalid Token'});
+    return this.response.status(200).json({ message: 'Success' });
+  }
 
 }
 

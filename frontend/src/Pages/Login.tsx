@@ -35,14 +35,12 @@ function Login() {
         placeholder='+5538123456789' 
         type="text" 
         name="phoneNumber" 
-        id=""
         onChange={({ target }) => setPhoneNumber( target.value )}
       />
       <input 
         placeholder='Sua senha' 
         type="password" 
         name="password" 
-        id=""
         onChange={({ target }) => setPassword( target.value )}
       />
       <button

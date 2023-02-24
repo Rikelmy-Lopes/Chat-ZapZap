@@ -1,4 +1,4 @@
-import { createToken } from '../Utils/JWT';
+import * as jwt from '../Utils/JWT';
 import UserModel from '../Model/UserModel';
 import { IResult } from '../Interface/UserInterface';
 
@@ -14,12 +14,18 @@ class UserService {
     if (result) {
       if (result.password === password) {
         const { id, name, phoneNumber } = result;
-        return { error: null, result: createToken(id, name, phoneNumber) };
+        return { error: null, result: jwt.createToken(id, name, phoneNumber) };
       } else {
         return { error: 'Password not correct', result: null };
       }
     }
     return { error: 'User not found', result: null };
+  }
+
+  public validateToken(token: string): IResult {
+    const response = jwt.validateToken(token);
+    if (response) return { error: null, result: 'Token Valid' };
+    return { error: 'Invalid Token', result: null };
   }
 }
 
