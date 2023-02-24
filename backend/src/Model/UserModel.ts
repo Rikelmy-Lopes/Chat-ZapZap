@@ -8,8 +8,8 @@ class UserModel {
     this.model = Users;
   }
 
-  public async getUSer(phoneNumber: string, password: string): Promise<Users | null> {
-    const result = await this.model.findOne({ where: { phoneNumber, password }});
+  public async getUserByPhone(phoneNumber: string): Promise<Users | null> {
+    const result = await this.model.findOne({ where: { phoneNumber }});
 
     return result;
   }

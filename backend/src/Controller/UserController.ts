@@ -12,12 +12,19 @@ class UserController {
     this.response = response;
   }
 
-  public async isUserExist() {
+  public async validateUser() {
     const { phoneNumber, password } = this.request.body;
-    const result  = await this.service.isUserExist(phoneNumber, password);
-    if (result) return this.response.status(200).json({ message: 'User Exist'});
-    return this.response.status(404).json({ message: 'User not Found'});
+    const { error, result }  = await this.service.validateUser(phoneNumber, password);
+    if (error === 'User not found') {
+      return this.response.status(404).json({ message: error });
+    }
+    if (error === 'Password not correct') {
+      return this.response.status(401).json({ message: error });
+    }
+    return this.response.status(200).json(result);
   }
+
+  
 
 }
 

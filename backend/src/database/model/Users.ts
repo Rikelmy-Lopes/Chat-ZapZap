@@ -6,6 +6,7 @@ class UsersModel extends Model {
   declare id: number;
   declare name: string;
   declare phoneNumber: string;
+  declare password: string;
 }
 
 UsersModel.init({

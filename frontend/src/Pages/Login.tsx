@@ -10,19 +10,23 @@ function Login() {
 
   const validateUser = async (): Promise<void> => {
     const host = process.env.REACT_APP_BACKEND_HOST;
-    console.log(host);
-    const { status } = await axios.post(`${host}/login`, {
-      phoneNumber,
-      password,
-    });
+    try {
+      const { data } = await axios.post(`${host}/login`, {
+        phoneNumber,
+        password,
+      });
 
-    if (status === 200) return history('/contacts');
-    return; 
+      localStorage.setItem('token', JSON.stringify(data));
+      history('/contacts');
+      return;
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
     if (pathname === '/') history('/login');
-    
+    if (localStorage.getItem('token')) history('/contacts');
   }, []);
 
   return(
