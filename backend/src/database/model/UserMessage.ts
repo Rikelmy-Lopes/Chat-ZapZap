@@ -1,7 +1,7 @@
 import { DataTypes , Model } from 'sequelize';
 import db from '.';
-import UsersModel from './UsersModel';
-import UsersRoomModel from './UsersRoomModel';
+import UsersModel from './Users';
+import UsersRoomModel from './UsersRoom';
 
 
 class UserMessage extends Model {

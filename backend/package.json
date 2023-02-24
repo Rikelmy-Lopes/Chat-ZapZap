@@ -7,7 +7,7 @@
     "start": "rm -rf ./build && tsc --project tsconfig.json && node build/src/server.js",
     "dev": "tsnd src/webSockets.ts",
     "build": "tsc --project tsconfig.json",
-    "db:reset": "npx sequelize-cli db:drop && npx sequelize-cli db:create && npx sequelize-cli db:migrate",
+    "db:reset": "npx sequelize-cli db:drop && npx sequelize-cli db:create && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
     "test": "npm test"
   },
   "repository": {

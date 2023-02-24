@@ -1,8 +1,8 @@
 import app from './app';
 import os from 'os';
 import 'dotenv/config';
-import UsersModel from './database/model/UsersModel';
-import UsersRoomModel from './database/model/UsersRoomModel';
+import UsersModel from './database/model/Users';
+import UsersRoomModel from './database/model/UsersRoom';
 import UserMessage from './database/model/UserMessage';
 const users: any = [
   {
@@ -18,7 +18,6 @@ const users: any = [
     phone: '38999269825'
   }
 ];
-
 
 app.get('/', (req, res) => {
   res.render('index.html');

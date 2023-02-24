@@ -21,8 +21,12 @@ UsersModel.init({
   },
   phoneNumber: {
     type: DataTypes.STRING,
-    allowNull: false
-  }
+    allowNull: false,
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
 }, {
   underscored: true,
   sequelize: db,
