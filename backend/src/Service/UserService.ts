@@ -1,3 +1,4 @@
+import { IUser } from './../Interface/UserInterface';
 import * as jwt from '../Utils/JWT';
 import UserModel from '../Model/UserModel';
 import { IResult } from '../Interface/UserInterface';
@@ -26,6 +27,14 @@ class UserService {
     const response = jwt.validateToken(token);
     if (response) return { error: null, result: 'Token Valid' };
     return { error: 'Invalid Token', result: null };
+  }
+
+  public async addUser(user: IUser): Promise<IResult> {
+    const response = await this.model.getUserByPhone(user.phoneNumber);
+
+    if (response) return { error: 'User already Exist', result: null };
+    const { id, name, phoneNumber } = await this.model.addUser(user);
+    return { error: null, result: jwt.createToken(id, name, phoneNumber) };
   }
 }
 

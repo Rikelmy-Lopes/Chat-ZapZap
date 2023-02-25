@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
 
 function Login() {
@@ -11,12 +11,12 @@ function Login() {
   const validateUser = async (): Promise<void> => {
     const host = process.env.REACT_APP_BACKEND_HOST;
     try {
-      const { data } = await axios.post(`${host}/login`, {
+      const { data: { token } } = await axios.post(`${host}/login`, {
         phoneNumber,
         password,
       });
 
-      localStorage.setItem('token', JSON.stringify(data));
+      localStorage.setItem('token', JSON.stringify(token));
       history('/contacts');
       return;
     } catch (error) {
@@ -48,6 +48,9 @@ function Login() {
       >
         Login
       </button>
+      <Link to='/register'>
+         Não tem uma conta?
+      </Link>
     </div>
   );
 }
