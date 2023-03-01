@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { io } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 
 function Message() {
   const [ message, setMessage ] = useState<string>();
   const [ roomId, setRoomId ] = useState<string>(); 
-  const socket = io('http://192.168.0.189:4000');
   const { userPhone } = useParams();
+  const socketRef = useRef<Socket>();
 
   const addMessage = (message: string) => {
     const divMessages = document.getElementById('messages') as HTMLElement;
@@ -14,26 +14,26 @@ function Message() {
     divMessages.innerHTML += `<p> ${ message } </p>`;
   };
 
-  socket.on('message-receive', (message) => {
-    addMessage(message);
-  });
-
   const openChat = () => {
-    socket.emit('chat-open', { userPhone, token: JSON.parse(localStorage.getItem('token') as string )});
+    socketRef.current?.emit('chat-open', { userPhone, token: JSON.parse(localStorage.getItem('token') as string )});
   };
-  
-
-  useEffect(() => {
-    openChat();
-    socket.on('roomId', (roomId) => {
-      setRoomId(roomId);
-    });
-  }, []);
 
   const sendMessage = () => {
-    socket.emit('message', { message, roomId });
+    socketRef.current?.emit('message', { message, roomId });
   };
 
+  useEffect(() => {
+    if (!socketRef.current) {
+      socketRef.current = io('http://192.168.0.189:4000');
+      openChat();
+      socketRef.current.on('roomId', (roomId) => {
+        setRoomId(roomId);
+      });
+      socketRef.current.on('message-receive', (message) => {
+        addMessage(message);
+      });
+    }
+  }, []);
 
   return(
     <div>

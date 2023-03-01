@@ -6,5 +6,7 @@ const router = express();
 router.post('/login', (req, res) => new UserController(req, res).validateUser());
 router.post('/login/token', (req, res) => new UserController(req, res).validateToken());
 router.post('/register', (req, res) => new UserController(req, res).addUser());
+router.get('/test', (req, res) => new UserController(req, res).testTest());
+
 
 export default router;

@@ -1,4 +1,5 @@
 import { Response, Request } from 'express';
+import UserRoomModel from '../Model/UserRoomModel';
 import { IUser } from '../Interface/UserInterface';
 import UserService from '../Service/UserService';
 
@@ -37,6 +38,13 @@ class UserController {
     const { error, result } = await this.service.addUser(user);
     if (error) return this.response.status(409).json({ message: error });
     return this.response.status(201).json({ token: result });
+  }
+
+  async testTest() {
+    const { phoneNumber1, phoneNumber2 } = this.request.body;
+    const result = await new UserRoomModel().getRoom(phoneNumber1, phoneNumber2);
+
+    this.response.status(200).json({ result });
   }
 
 }

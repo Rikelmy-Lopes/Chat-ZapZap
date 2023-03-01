@@ -8,3 +8,9 @@ export interface IUser {
     password: string,
     phoneNumber: string
 }
+
+export interface IUserJWT {
+    name: string,
+    id: string,
+    phoneNumber: string
+}
