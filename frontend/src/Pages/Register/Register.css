@@ -1,0 +1,45 @@
+
+
+#register-card {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+#register {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    height: 500px;
+    width: 350px;
+    box-shadow: 0px 8px 47px 10px rgba(0, 0, 0, 0.144)
+}
+
+#register-button {
+    padding: 8px 25px;
+    border-radius: 5px;
+    border-style: solid;
+}
+
+#register-button:disabled {
+    cursor: not-allowed;
+    background-color: white;
+}
+
+#login-link {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+}
+
+#login-link > a {
+    text-decoration: none;
+    color: black;
+    font-weight: 700;
+}

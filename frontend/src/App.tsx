@@ -1,9 +1,9 @@
 import React from 'react';
 import './App.css';
-import Login from './Pages/Login';
+import Login from './Pages/Login/Login';
 import { Route, Routes } from 'react-router-dom';
 import Contacts from './Pages/Contacts';
-import Register from './Pages/Register';
+import Register from './Pages/Register/Register';
 import Message from './Pages/Message';
 
 function App() {

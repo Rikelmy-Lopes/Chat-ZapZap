@@ -1,0 +1,52 @@
+
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+
+
+#login-card {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+#login-card > #login {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    height: 500px;
+    width: 350px;
+    box-shadow: 0px 8px 47px 10px rgba(0, 0, 0, 0.144)
+}
+
+#login-button {
+    padding: 8px 25px;
+    border-radius: 5px;
+    border-style: solid;
+}
+
+#login-button:disabled {
+    cursor: not-allowed;
+}
+
+#register-link {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+#register-link > a {
+    text-decoration: none;
+    color: black;
+    font-weight: 700;
+}

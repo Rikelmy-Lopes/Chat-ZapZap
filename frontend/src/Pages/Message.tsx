@@ -1,29 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { io, Socket } from 'socket.io-client';
+import axios from 'axios';
+import Header from '../Components/Header/Header';
 
 function Message() {
   const [ message, setMessage ] = useState<string>();
   const [ roomId, setRoomId ] = useState<string>(); 
   const { userPhone } = useParams();
   const socketRef = useRef<Socket>();
+  const history = useNavigate();
 
-  const addMessage = (message: string) => {
-    const divMessages = document.getElementById('messages') as HTMLElement;
-    console.log(message);
-    divMessages.innerHTML += `<p> ${ message } </p>`;
-  };
-
-  const openChat = () => {
-    socketRef.current?.emit('chat', { userPhone, token: JSON.parse(localStorage.getItem('token') as string )});
-  };
-
-  const sendMessage = () => {
-    socketRef.current?.emit('message', { message, roomId });
-  };
-
-  useEffect(() => {
-    if (!socketRef.current) {
+  const createSocketConnection = () => {
+    if (!socketRef.current && localStorage.getItem('token')) {
       socketRef.current = io('http://192.168.0.189:4000');
       openChat();
       socketRef.current.on('roomId', (roomId) => {
@@ -33,10 +22,45 @@ function Message() {
         addMessage(message);
       });
     }
+  };
+
+  const validateToken = async (): Promise<void> => {
+    const host = process.env.REACT_APP_BACKEND_HOST;
+    try {
+      await axios.post(`${host}/login/token`, {
+        token: JSON.parse(String(localStorage.getItem('token')))
+      });
+      return;
+    }
+    catch(_error) {
+      localStorage.removeItem('token');
+      history('/login');
+      return;
+    }
+  };
+
+  const addMessage = (message: string) => {
+    const divMessages = document.getElementById('messages') as HTMLElement;
+    divMessages.innerHTML += `<p> ${ message } </p>`;
+  };
+
+  const openChat = () => {
+    if (!localStorage.getItem('token')) return;
+    socketRef.current?.emit('chat', { userPhone, token: JSON.parse(localStorage.getItem('token') as string )});
+  };
+
+  const sendMessage = () => {
+    socketRef.current?.emit('message', { message, roomId });
+  };
+
+  useEffect(() => {
+    validateToken();
+    createSocketConnection();
   }, []);
 
   return(
     <div>
+      <Header/>
       <h2>Conversando com: Name</h2>
       <input
         placeholder='Digite sua mensagem'

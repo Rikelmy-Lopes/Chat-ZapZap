@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
+import './Login.css';
 
 function Login() {
   const { pathname } = useLocation();
@@ -30,27 +31,41 @@ function Login() {
   }, []);
 
   return(
-    <div>
-      <input 
-        placeholder='+5538123456789' 
-        type="text" 
-        name="phoneNumber" 
-        onChange={({ target }) => setPhoneNumber( target.value )}
-      />
-      <input 
-        placeholder='Sua senha' 
-        type="password" 
-        name="password" 
-        onChange={({ target }) => setPassword( target.value )}
-      />
-      <button
-        onClick={ validateUser }
-      >
+    <div id='login-card'>
+      <div id='login'>
+        <label htmlFor="phoneNumber">
+          Número de Telefone:
+        </label>
+        <input 
+          placeholder='+5538123456789' 
+          type="text"
+          id='phoneNumber'
+          name="phoneNumber" 
+          onChange={({ target }) => setPhoneNumber( target.value )}
+        />
+        <label htmlFor="password">
+          Sua senha:
+        </label>
+        <input 
+          placeholder='**********' 
+          type="password" 
+          id='password'
+          name="password" 
+          onChange={({ target }) => setPassword( target.value )}
+        />
+        <button
+          id='login-button'
+          onClick={ validateUser }
+        >
         Login
-      </button>
-      <Link to='/register'>
-         Não tem uma conta?
-      </Link>
+        </button>
+        <div id='register-link'>
+          <p>Não tem uma conta?</p>
+          <Link to='/register'>
+         Registre-se
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
