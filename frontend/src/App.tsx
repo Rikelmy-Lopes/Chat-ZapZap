@@ -4,14 +4,16 @@ import Login from './Pages/Login';
 import { Route, Routes } from 'react-router-dom';
 import Contacts from './Pages/Contacts';
 import Register from './Pages/Register';
+import Message from './Pages/Message';
 
 function App() {
   return (
     <Routes>
-      <Route element={<Contacts/>} path='/contacts' />
-      <Route element={<Login/>} path='/login' />
-      <Route element={<Login/>} path='/' />
-      <Route element={<Register/>} path='/register' />
+      <Route element={ <Message/> } path='/message/:userPhone' />
+      <Route element={ <Contacts/> } path='/contacts' />
+      <Route element={ <Login/> } path='/login' />
+      <Route element={ <Register/> } path='/register' />
+      <Route element={ <Login/> } path='/' />
     </Routes>
   );
 }
