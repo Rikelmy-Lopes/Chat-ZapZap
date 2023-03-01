@@ -37,7 +37,7 @@ class UserRoomModel {
     return room?.roomId;
   }
 
-  public async createRoom(phoneNumber1: string, phoneNumber2: string) {
+  public async createRoom(phoneNumber1: string, phoneNumber2: string): Promise<string | undefined> {
     const user1 = await this.userModel.getUserByPhone(phoneNumber1);
     const user2 = await this.userModel.getUserByPhone(phoneNumber2);
 

@@ -32,9 +32,9 @@ class UserController {
     return this.response.status(200).json({ message: result });
   }
 
-  public async addUser() {
+  public async save() {
     const user = this.request.body as IUser;
-    const { error, result } = await this.service.addUser(user);
+    const { error, result } = await this.service.save(user);
     if (error) return this.response.status(409).json({ message: error });
     return this.response.status(201).json({ token: result });
   }

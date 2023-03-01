@@ -1,3 +1,4 @@
+import { IUser } from './../Interface/UserInterface';
 import { Response, Request, NextFunction } from 'express';
 
 class UserMiddleware {
@@ -30,6 +31,15 @@ class UserMiddleware {
       return this.response.status(400).json({ message: this.ERROR_MESSAGE_TOKEN });
     }
     
+    this.next();
+  }
+
+  public validateUser() {
+    const user = this.request.body as IUser;
+    if (!user.name || !user.password || !user.phoneNumber) {
+      return this.response.status(400).json({ message: this.ERROR_MESSAGE_FIELDS });
+    }
+
     this.next();
   }
 }

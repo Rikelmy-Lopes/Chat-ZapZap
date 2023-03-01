@@ -12,7 +12,10 @@ router.post('/login/token', [
   (req: Request, res: Response, next: NextFunction) => new UserMiddleware(req, res, next).validateToken(),
   (req: Request, res: Response) => new UserController(req, res).validateToken()
 ]);
-router.post('/register', (req, res) =>  new UserController(req, res).addUser());
+router.post('/register', [
+  (req: Request, res: Response, next: NextFunction) => new UserMiddleware(req, res, next).validateUser(),
+  (req: Request, res: Response) =>  new UserController(req, res).save()
+]);
 
 
 export default router;

@@ -30,7 +30,7 @@ class UserService {
     return { error: 'Invalid Token', result: null };
   }
 
-  public async addUser(user: IUser): Promise<IResult> {
+  public async save(user: IUser): Promise<IResult> {
     const userAlreadyExist = await this.model.getUserByPhone(user.phoneNumber);
 
     if (userAlreadyExist) return { error: 'User already Exist', result: null };
