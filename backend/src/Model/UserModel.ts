@@ -16,7 +16,7 @@ class UserModel {
     return result;
   }
 
-  public async addUser(user: IUser): Promise<Users> {
+  public async save(user: IUser): Promise<Users> {
     const result = await this.model.create({
       name: user.name,
       password: await encryptPassword(user.password),

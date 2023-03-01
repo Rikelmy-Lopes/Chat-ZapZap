@@ -13,15 +13,15 @@ class UserService {
 
   public async validateUser(phoneNumber: string, password: string): Promise<IResult> {
     const result = await this.model.getUserByPhone(phoneNumber);
-    if (result) {
-      if (await checkPassword(password, result.password)) {
-        const { id, name, phoneNumber } = result;
-        return { error: null, result: jwt.createToken(id, name, phoneNumber) };
-      } else {
-        return { error: 'Password not correct', result: null };
-      }
+    if (!result) {
+      return { error: 'User not found', result: null };
     }
-    return { error: 'User not found', result: null };
+    if (await checkPassword(password, result.password)) {
+      const { id, name, phoneNumber } = result;
+      return { error: null, result: jwt.createToken(id, name, phoneNumber) };
+    } else {
+      return { error: 'Password not correct', result: null };
+    }
   }
 
   public validateToken(token: string): IResult {
@@ -31,10 +31,10 @@ class UserService {
   }
 
   public async addUser(user: IUser): Promise<IResult> {
-    const response = await this.model.getUserByPhone(user.phoneNumber);
+    const userAlreadyExist = await this.model.getUserByPhone(user.phoneNumber);
 
-    if (response) return { error: 'User already Exist', result: null };
-    const { id, name, phoneNumber } = await this.model.addUser(user);
+    if (userAlreadyExist) return { error: 'User already Exist', result: null };
+    const { id, name, phoneNumber } = await this.model.save(user);
     return { error: null, result: jwt.createToken(id, name, phoneNumber) };
   }
 }
