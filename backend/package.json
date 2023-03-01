@@ -5,7 +5,7 @@
   "main": "./build/server.js",
   "scripts": {
     "start": "rm -rf ./build && tsc --project tsconfig.json && node build/src/server.js",
-    "dev": "tsnd src/webSockets.ts",
+    "dev": "tsnd src/server.ts",
     "build": "tsc --project tsconfig.json",
     "db:reset": "npx sequelize-cli db:drop && npx sequelize-cli db:create && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
     "test": "npm test"
@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/Rikelmy-Lopes/Chat-ZapZap#readme",
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "dotenv": "^16.0.3",
     "ejs": "^3.1.8",
     "express": "^4.18.2",
@@ -30,6 +31,7 @@
     "socket.io": "^4.6.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/ejs": "^3.1.2",
     "@types/express": "^4.17.17",
     "@types/jsonwebtoken": "^9.0.1",

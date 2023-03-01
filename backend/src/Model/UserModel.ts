@@ -1,5 +1,6 @@
 import { IUser } from '../Interface/UserInterface';
 import Users from '../database/model/Users';
+import { encryptPassword } from '../Utils/BCrypt';
 
 
 class UserModel {
@@ -18,7 +19,7 @@ class UserModel {
   public async addUser(user: IUser): Promise<Users> {
     const result = await this.model.create({
       name: user.name,
-      password: user.password,
+      password: await encryptPassword(user.password),
       phoneNumber: user.phoneNumber
     });
     return result;

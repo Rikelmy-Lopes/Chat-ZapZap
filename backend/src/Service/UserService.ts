@@ -2,6 +2,7 @@ import { IUser } from './../Interface/UserInterface';
 import * as jwt from '../Utils/JWT';
 import UserModel from '../Model/UserModel';
 import { IResult } from '../Interface/UserInterface';
+import { checkPassword } from '../Utils/BCrypt';
 
 class UserService {
   private model: UserModel;
@@ -13,7 +14,7 @@ class UserService {
   public async validateUser(phoneNumber: string, password: string): Promise<IResult> {
     const result = await this.model.getUserByPhone(phoneNumber);
     if (result) {
-      if (result.password === password) {
+      if (await checkPassword(password, result.password)) {
         const { id, name, phoneNumber } = result;
         return { error: null, result: jwt.createToken(id, name, phoneNumber) };
       } else {

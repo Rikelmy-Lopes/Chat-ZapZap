@@ -15,7 +15,7 @@ function Message() {
   };
 
   const openChat = () => {
-    socketRef.current?.emit('chat-open', { userPhone, token: JSON.parse(localStorage.getItem('token') as string )});
+    socketRef.current?.emit('chat', { userPhone, token: JSON.parse(localStorage.getItem('token') as string )});
   };
 
   const sendMessage = () => {
