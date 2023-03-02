@@ -1,22 +1,20 @@
 import { Server } from 'socket.io';
 import { Socket } from 'socket.io/dist/socket';
 import UserRoomModel from '../Model/UserRoomModel';
-import { getInfoFromToken } from '../Utils/JWT';
 const userRoom = new UserRoomModel();
 
 export default function(socket: Socket, io: Server) {
 
-  socket.on('chat', async ({ userPhone, token }) => {
-    const phoneNumber = getInfoFromToken(token) as string;
-    const roomId = await userRoom.getRoom(userPhone, phoneNumber);
+  socket.on('chat', async ({ phoneNumber1, phoneNumber2 }) => {
+    let roomId = await userRoom.getRoom(phoneNumber1, phoneNumber2);
     if(roomId) {
-      socket.join(String(roomId));
+      socket.join(roomId);
     } else {
-      const roomId = await userRoom.createRoom(userPhone, phoneNumber);
+      roomId = await userRoom.createRoom(phoneNumber1, phoneNumber2);
       socket.join(String(roomId));
     }
-    const roomId2 = await userRoom.getRoom(userPhone, phoneNumber);
-    socket.emit('roomId', roomId2);
+    roomId = await userRoom.getRoom(phoneNumber1, phoneNumber2);
+    socket.emit('roomId', roomId);
   });
     
   socket.on('message', ({ message, roomId }) => {

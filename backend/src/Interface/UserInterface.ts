@@ -9,6 +9,12 @@ export interface IUser {
     phoneNumber: string
 }
 
+export interface IUserResponse {
+    name: string,
+    phoneNumber: string,
+    token: string,
+}
+
 export interface IUserJWT {
     name: string,
     id: string,

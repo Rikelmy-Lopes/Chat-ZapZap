@@ -12,7 +12,7 @@ class UserRoomModel {
     this.userModel = new UserModel();
   }
 
-  public async getRoom(phoneNumber1: string, phoneNumber2: string): Promise<number | undefined> {
+  public async getRoom(phoneNumber1: string, phoneNumber2: string): Promise<string | undefined> {
     const room = await UsersRoomModel.findOne({
       include: [
         { model: UsersModel, 
@@ -34,7 +34,7 @@ class UserRoomModel {
       ],
     },
     );
-    return room?.roomId;
+    return room?.roomId ? String(room.roomId) : undefined;
   }
 
   public async createRoom(phoneNumber1: string, phoneNumber2: string): Promise<string | undefined> {

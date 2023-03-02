@@ -41,11 +41,11 @@ function Login() {
   const validateUser = async (): Promise<void> => {
     const host = process.env.REACT_APP_BACKEND_HOST;
     try {
-      const { data: { token } } = await axios.post(`${host}/login`, {
+      const { data } = await axios.post(`${host}/login`, {
         phoneNumber,
         password,
       });
-      localStorage.setItem('token', JSON.stringify(token));
+      localStorage.setItem('user', JSON.stringify(data));
       history('/contacts');
       return;
     } catch (error) {
@@ -56,7 +56,7 @@ function Login() {
 
   useEffect(() => {
     if (pathname === '/') history('/login');
-    if (localStorage.getItem('token')) history('/contacts');
+    if (localStorage.getItem('user')) history('/contacts');
   }, []);
   
 

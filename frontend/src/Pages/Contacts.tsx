@@ -47,14 +47,15 @@ function Contacts() {
 
   const validateToken = async (): Promise<void> => {
     const host = process.env.REACT_APP_BACKEND_HOST;
+    const { token } = JSON.parse(String(localStorage.getItem('user'))) || {};
     try {
       await axios.post(`${host}/login/token`, {
-        token: JSON.parse(String(localStorage.getItem('token')))
+        token
       });
       return;
     }
     catch(_error) {
-      localStorage.removeItem('token');
+      localStorage.removeItem('user');
       history('/login');
       return;
     }

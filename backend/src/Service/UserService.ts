@@ -1,7 +1,6 @@
-import { IUser } from './../Interface/UserInterface';
+import { IUser, IResult, IUserResponse } from './../Interface/UserInterface';
 import * as jwt from '../Utils/JWT';
 import UserModel from '../Model/UserModel';
-import { IResult } from '../Interface/UserInterface';
 import { checkPassword } from '../Utils/BCrypt';
 
 class UserService {
@@ -11,16 +10,16 @@ class UserService {
     this.model = new UserModel();
   }
 
-  public async validateUser(phoneNumber: string, password: string): Promise<IResult> {
+  public async validateUser(phoneNumber: string, password: string): Promise<string | IUserResponse> {
     const result = await this.model.getUserByPhone(phoneNumber);
     if (!result) {
-      return { error: 'User not Found', result: null };
+      return 'User not Found';
     }
     if (await checkPassword(password, result.password)) {
       const { id, name, phoneNumber } = result;
-      return { error: null, result: jwt.createToken(id, name, phoneNumber) };
+      return { name, phoneNumber, token: jwt.createToken(id, name, phoneNumber), };
     } else {
-      return { error: 'Password not Correct', result: null };
+      return 'Password not Correct';
     }
   }
 

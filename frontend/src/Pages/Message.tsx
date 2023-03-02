@@ -12,7 +12,7 @@ function Message() {
   const history = useNavigate();
 
   const createSocketConnection = () => {
-    if (!socketRef.current && localStorage.getItem('token')) {
+    if (!socketRef.current && localStorage.getItem('user')) {
       socketRef.current = io('http://192.168.0.189:4000');
       openChat();
       socketRef.current.on('roomId', (roomId) => {
@@ -26,14 +26,15 @@ function Message() {
 
   const validateToken = async (): Promise<void> => {
     const host = process.env.REACT_APP_BACKEND_HOST;
+    const { token } = JSON.parse(String(localStorage.getItem('user'))) || {};
     try {
       await axios.post(`${host}/login/token`, {
-        token: JSON.parse(String(localStorage.getItem('token')))
+        token
       });
       return;
     }
-    catch(_error) {
-      localStorage.removeItem('token');
+    catch(error) {
+      localStorage.removeItem('user');
       history('/login');
       return;
     }
@@ -45,8 +46,9 @@ function Message() {
   };
 
   const openChat = () => {
-    if (!localStorage.getItem('token')) return;
-    socketRef.current?.emit('chat', { userPhone, token: JSON.parse(localStorage.getItem('token') as string )});
+    if (!localStorage.getItem('user')) return;
+    const { phoneNumber } = JSON.parse(String(localStorage.getItem('user'))) || {};
+    socketRef.current?.emit('chat', { phoneNumber1: userPhone, phoneNumber2: phoneNumber});
   };
 
   const sendMessage = () => {
