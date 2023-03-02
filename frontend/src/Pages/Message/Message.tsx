@@ -2,17 +2,29 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { io, Socket } from 'socket.io-client';
 import axios from 'axios';
-import Header from '../Components/Header/Header';
+import Header from '../../Components/Header/Header';
+import './Message.css';
 
 function Message() {
-  const [ message, setMessage ] = useState<string>();
+  const [ message, setMessage ] = useState<string>('');
   const [ hashRoomId, setHashRoomId ] = useState<string>(); 
   const { userPhone } = useParams();
   const socketRef = useRef<Socket>();
   const history = useNavigate();
 
+  const autoScroll = () => {
+    const chatMessages = document.getElementById('messages') as HTMLElement;
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  };
+
+  const getChatWithName = () => {
+    const contacts = JSON.parse(String(localStorage.getItem('contacts'))) as any[];
+    const contact = contacts.find((contact) => contact.phoneNumber === userPhone);
+    return contact.name;
+  };
+
   const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' && message.length > 0) {
       sendMessage();
       return;
     }
@@ -25,8 +37,8 @@ function Message() {
       socketRef.current.on('roomId-send', (hash) => {
         setHashRoomId(hash);
       });
-      socketRef.current.on('message-receive', (message) => {
-        addMessage(message);
+      socketRef.current.on('message-receive', ({ message, userName }) => {
+        addMessage(message, userName);
       });
     }
   };
@@ -47,9 +59,10 @@ function Message() {
     }
   };
 
-  const addMessage = (message: string) => {
+  const addMessage = (message: string, userName: string) => {
     const divMessages = document.getElementById('messages') as HTMLElement;
-    divMessages.innerHTML += `<p> ${ message } </p>`;
+    divMessages.innerHTML += `<span> <strong>${ userName }</strong>: ${ message } </span>`;
+    autoScroll();
   };
 
   const openChat = () => {
@@ -59,7 +72,8 @@ function Message() {
   };
 
   const sendMessage = () => {
-    socketRef.current?.emit('message-send', { message, hashRoomId });
+    const { name } = JSON.parse(String(localStorage.getItem('user')));
+    socketRef.current?.emit('message-send', { message, hashRoomId, userName: name });
     setMessage('');
   };
 
@@ -79,7 +93,7 @@ function Message() {
   return(
     <div>
       <Header/>
-      <h2>Conversando com: Name</h2>
+      <h2>Conversando com: { getChatWithName() }</h2>
       <input
         placeholder='Digite sua mensagem'
         type="text" 

@@ -18,9 +18,9 @@ export default function(socket: Socket, io: Server) {
     socket.emit('roomId-send', encryptedRoomId);
   });
     
-  socket.on('message-send', ({ message, hashRoomId }) => {
+  socket.on('message-send', ({ message, hashRoomId, userName }) => {
     const decryptedRoomId =  decryptRoomId(hashRoomId);
-    io.to(String(decryptedRoomId)).emit('message-receive', message);
+    io.to(String(decryptedRoomId)).emit('message-receive', { message, userName });
   });
 
 }

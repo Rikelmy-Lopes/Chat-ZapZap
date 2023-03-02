@@ -4,7 +4,7 @@ import Login from './Pages/Login/Login';
 import { Route, Routes } from 'react-router-dom';
 import Contacts from './Pages/Contacts';
 import Register from './Pages/Register/Register';
-import Message from './Pages/Message';
+import Message from './Pages/Message/Message';
 
 function App() {
   return (

@@ -89,7 +89,8 @@ function Contacts() {
       <h3>Contatos</h3>
       <div id='contacts-container'>
         { contacts.map((contact) => (
-          <Link id='contacts'  key={`${contact.phoneNumber}`} to={`/message/${contact.phoneNumber}`}>
+          <Link
+            id='contacts'  key={`${contact.phoneNumber}`} to={`/message/${contact.phoneNumber}`}>
             <span> Nome: <strong>{ contact.name }</strong> </span>
             <span> PhoneNumber: { contact.phoneNumber } </span>
           </Link>
