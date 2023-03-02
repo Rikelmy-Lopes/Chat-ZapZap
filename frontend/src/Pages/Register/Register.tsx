@@ -1,23 +1,25 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { IApiResponseToken } from '../../Interface/Interfaces';
 import './Register.css';
 
 function Register() {
+  const history = useNavigate();
   const [ phoneNumber, setPhoneNumber ] = useState<string>('');
   const [ name, setName ] = useState<string>('');
   const [ password, setPassword ] = useState<string>('');
-  const history = useNavigate();
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
+  const handleKeyDown = (event: React.KeyboardEvent): void => {
     if (event.key === 'Enter' && isAllFieldsFilledOut()) {
       registerUser();
       return;
     }
   };
 
-  const removeErrorMessage = () => {
-    const tagError = document.getElementById('error-message') as HTMLElement;
+  const removeErrorMessage = (): void => {
+    const tagError: HTMLElement | null = document.getElementById('error-message');
+    if (!tagError) return;
     setTimeout(() => {
       tagError.style.display = 'none';
       tagError.innerText = '';
@@ -25,7 +27,8 @@ function Register() {
   };
 
   const displayErrorMessage = (): void => {
-    const tagError = document.getElementById('error-message') as HTMLElement;
+    const tagError: HTMLElement | null = document.getElementById('error-message');
+    if (!tagError) return;
     tagError.style.display = 'inline-block';
     tagError.innerText = 'Usuário já Existe!';
     removeErrorMessage();
@@ -34,7 +37,7 @@ function Register() {
   const registerUser = async (): Promise<void> => {
     const host = process.env.REACT_APP_BACKEND_HOST;
     try {
-      const { data: { token } } = await axios.post(`${host}/register`, {
+      const { data: { token } }: { data: IApiResponseToken } = await axios.post(`${host}/register`, {
         phoneNumber,
         name,
         password,
@@ -50,7 +53,7 @@ function Register() {
     }
   };
 
-  const isAllFieldsFilledOut = () => {
+  const isAllFieldsFilledOut = (): boolean => {
     if (phoneNumber.length >= 12 && password.length >= 6 && name.length >= 4) {
       return true;
     }

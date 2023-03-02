@@ -17,18 +17,18 @@ const validateToken = (token: string): boolean => {
   }
 };
 
-const getInfoFromToken = (token: string): string | undefined => {
-  try {
-    const { phoneNumber } = jwt.decode(token) as IUserJWT;
-    return phoneNumber;
-  } catch (error) {
-    console.log(error);
-    return;
-  }
-};
+// const getInfoFromToken = (token: string): string | undefined => {
+//   try {
+//     const { phoneNumber } = jwt.decode(token) as IUserJWT;
+//     return phoneNumber;
+//   } catch (error) {
+//     console.log(error);
+//     return;
+//   }
+// };
 
 export {
   createToken,
   validateToken,
-  getInfoFromToken
+  // getInfoFromToken
 };

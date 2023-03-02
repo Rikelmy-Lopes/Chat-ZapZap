@@ -2,6 +2,7 @@ import { IUser, IResult, IUserResponse } from './../Interface/UserInterface';
 import * as jwt from '../Utils/JWT';
 import UserModel from '../Model/UserModel';
 import { checkPassword } from '../Utils/BCrypt';
+import UsersModel from '../database/model/Users';
 
 class UserService {
   private model: UserModel;
@@ -11,7 +12,7 @@ class UserService {
   }
 
   public async validateUser(phoneNumber: string, password: string): Promise<string | IUserResponse> {
-    const result = await this.model.getUserByPhone(phoneNumber);
+    const result: UsersModel | null = await this.model.getUserByPhone(phoneNumber);
     if (!result) {
       return 'User not Found';
     }

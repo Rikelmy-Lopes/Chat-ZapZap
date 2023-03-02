@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { IUser } from '../../Interface/Interfaces';
 import './Header.css';
 
 function Header() {
   const { pathname } = useLocation();
   const [userName, setUserName] = useState<string>('');
 
-  const logout = () => {
+  const logout = (): void => {
     localStorage.removeItem('user');
   };
 
-  useEffect(() => {
-    const user = JSON.parse(String(localStorage.getItem('user')));
+  useEffect((): void => {
+    const user: IUser = JSON.parse(String(localStorage.getItem('user')));
     setUserName(user.name);
   }, []);
   

@@ -11,17 +11,18 @@ class UserModel {
   }
 
   public async getUserByPhone(phoneNumber: string): Promise<Users | null> {
-    const result = await this.model.findOne({ where: { phoneNumber }});
+    const result: Users | null = await this.model.findOne({ where: { phoneNumber }});
 
     return result;
   }
 
   public async save(user: IUser): Promise<Users> {
-    const result = await this.model.create({
+    const result: Users = await this.model.create({
       name: user.name,
       password: await encryptPassword(user.password),
       phoneNumber: user.phoneNumber
     });
+    
     return result;
   }
 }

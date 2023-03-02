@@ -2,12 +2,13 @@ import axios from 'axios';
 import React, { useEffect, useState} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Header from '../Components/Header/Header';
+import { IContact, IUser } from '../Interface/Interfaces';
 
 function Contacts() {
   const history = useNavigate();
-  const [name, setName] = useState<string>();
-  const [phoneNumber, setPhoneNumber] = useState<string>();
-  const [contacts, setContacts] = useState<any[]>([]);
+  const [name, setName] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [contacts, setContacts] = useState<IContact[]>([]);
 
   const isContactExist = async (): Promise<boolean> => {
     const host = process.env.REACT_APP_BACKEND_HOST;
@@ -19,10 +20,10 @@ function Contacts() {
     }
   };
 
-  const addContact = async () => {
+  const addContact = async (): Promise<void> => {
     if (await isContactExist()) {
       if (localStorage.getItem('contacts')) {
-        const contacts = JSON.parse(String(localStorage.getItem('contacts'))) as any[];
+        const contacts: IContact[] = JSON.parse(String(localStorage.getItem('contacts')));
         contacts.push({
           name,
           phoneNumber,
@@ -37,7 +38,7 @@ function Contacts() {
     }
   };
 
-  const retrieveContacts = () => {
+  const retrieveContacts = (): void => {
     if (localStorage.getItem('contacts')) {
       setContacts(JSON.parse(String(localStorage.getItem('contacts'))));
       return;
@@ -47,7 +48,7 @@ function Contacts() {
 
   const validateToken = async (): Promise<void> => {
     const host = process.env.REACT_APP_BACKEND_HOST;
-    const { token } = JSON.parse(String(localStorage.getItem('user'))) || {};
+    const { token }: IUser = JSON.parse(String(localStorage.getItem('user')));
     try {
       await axios.post(`${host}/login/token`, {
         token
@@ -61,7 +62,7 @@ function Contacts() {
     }
   };
 
-  useEffect(() => {
+  useEffect((): void => {
     validateToken();
     retrieveContacts();
   }, []);

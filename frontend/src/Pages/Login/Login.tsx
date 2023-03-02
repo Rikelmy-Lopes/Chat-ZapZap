@@ -1,39 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import axios, { Axios, AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 import './Login.css';
+import { IApiResponseMessage, IUser } from '../../Interface/Interfaces';
 
 function Login() {
-  const { pathname } = useLocation();
   const history = useNavigate();
+  const { pathname } = useLocation();
   const [ phoneNumber, setPhoneNumber ] = useState<string>('');
   const [ password, setPassword ] = useState<string>('');
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
+  const handleKeyDown = (event: React.KeyboardEvent): void => {
     if (event.key === 'Enter' && isAllFieldsFilledOut()) {
       validateUser();
       return;
     }
   };
 
-  const isAllFieldsFilledOut = () => {
+  const isAllFieldsFilledOut = (): boolean => {
     if (phoneNumber.length >= 12 && password.length >= 4) {
       return true;
     }
     return false;
   };
 
-  const removeErrorMessage = () => {
-    const tagError = document.getElementById('error-message') as HTMLElement;
+  const removeErrorMessage = (): void => {
+    const tagError:HTMLElement | null = document.getElementById('error-message');
+    if(!tagError) return;
     setTimeout(() => {
       tagError.style.display = 'none';
       tagError.innerText = '';
     }, 2500);
   };
 
-  const displayErrorMessage = (error: any): void => {
-    const { data: { message } } = error.response;
-    const tagError = document.getElementById('error-message') as HTMLElement;
+  const displayErrorMessage = (error: AxiosError<IApiResponseMessage>): void => {
+    const message = error?.response?.data?.message;
+    const tagError: HTMLElement | null = document.getElementById('error-message');
+    if (!tagError) return;
     if (message === 'User not Found') {
       tagError.style.display = 'inline-block';
       tagError.innerText = 'Usuário não existe!';
@@ -48,7 +51,7 @@ function Login() {
   const validateUser = async (): Promise<void> => {
     const host = process.env.REACT_APP_BACKEND_HOST;
     try {
-      const { data } = await axios.post(`${host}/login`, {
+      const { data } = await axios.post<IUser>(`${host}/login`, {
         phoneNumber,
         password,
       });
@@ -56,12 +59,12 @@ function Login() {
       history('/contacts');
       return;
     } catch (error) {
-      displayErrorMessage(error);
+      displayErrorMessage(error as AxiosError<IApiResponseMessage>);
       console.log(error);
     }
   };
 
-  useEffect(() => {
+  useEffect((): void => {
     if (pathname === '/') history('/login');
     if (localStorage.getItem('user')) history('/contacts');
   }, []);

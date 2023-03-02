@@ -2,7 +2,7 @@ import app from './app';
 import os from 'os';
 import 'dotenv/config';
 import http from 'http';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 const serverSocketIo = http.createServer();
 import socketRoutes from './Router/WebSockets';
 const io = new Server(serverSocketIo, {
@@ -11,7 +11,7 @@ const io = new Server(serverSocketIo, {
   }
 });
 
-let ip : string;
+let ip: string;
 const networkInterfaces = os.networkInterfaces();
 const PORT = process.env.PORT || 3001;
 if (networkInterfaces.wlp1s0) {
@@ -20,7 +20,7 @@ if (networkInterfaces.wlp1s0) {
   ip = 'localhost';
 }
 
-io.on('connection', (socket) => {
+io.on('connection', (socket: Socket) => {
   console.log('Socket conectado', socket.id);
 
   socketRoutes(socket, io);

@@ -1,6 +1,6 @@
 import UsersRoomModel from '../database/model/UsersRoom';
 import UserModel from './UserModel';
-import { Op, Sequelize } from 'sequelize';
+import { Op } from 'sequelize';
 import UsersModel from '../database/model/Users';
 
 class UserRoomModel {
@@ -38,14 +38,14 @@ class UserRoomModel {
   }
 
   public async createRoom(phoneNumber1: string, phoneNumber2: string): Promise<string | undefined> {
-    const user1 = await this.userModel.getUserByPhone(phoneNumber1);
-    const user2 = await this.userModel.getUserByPhone(phoneNumber2);
+    const user1: UsersModel | null = await this.userModel.getUserByPhone(phoneNumber1);
+    const user2:UsersModel | null = await this.userModel.getUserByPhone(phoneNumber2);
 
     if (user1 && user2) {
-      const { roomId } = await this.model.create({ userId1: user1.id, userId2: user2.id });
+      const { roomId }: UsersRoomModel = await this.model.create({ userId1: user1.id, userId2: user2.id });
       return String(roomId);
     }
-
+    return;
   }
 }
 
