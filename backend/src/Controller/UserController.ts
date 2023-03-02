@@ -16,10 +16,10 @@ class UserController {
   public async validateLogin() {
     const { phoneNumber, password } = this.request.body;
     const { error, result }  = await this.service.validateUser(phoneNumber, password);
-    if (error === 'User not found') {
+    if (error === 'User not Found') {
       return this.response.status(404).json({ message: error });
     }
-    if (error === 'Password not correct') {
+    if (error === 'Password not Correct') {
       return this.response.status(401).json({ message: error });
     }
     return this.response.status(200).json({ token: result });

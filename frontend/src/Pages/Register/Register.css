@@ -23,6 +23,7 @@
     padding: 8px 25px;
     border-radius: 5px;
     border-style: solid;
+    cursor: pointer;
 }
 
 #register-button:disabled {

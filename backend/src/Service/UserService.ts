@@ -14,13 +14,13 @@ class UserService {
   public async validateUser(phoneNumber: string, password: string): Promise<IResult> {
     const result = await this.model.getUserByPhone(phoneNumber);
     if (!result) {
-      return { error: 'User not found', result: null };
+      return { error: 'User not Found', result: null };
     }
     if (await checkPassword(password, result.password)) {
       const { id, name, phoneNumber } = result;
       return { error: null, result: jwt.createToken(id, name, phoneNumber) };
     } else {
-      return { error: 'Password not correct', result: null };
+      return { error: 'Password not Correct', result: null };
     }
   }
 

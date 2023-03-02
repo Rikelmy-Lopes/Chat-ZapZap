@@ -9,6 +9,21 @@ function Register() {
   const [ password, setPassword ] = useState<string>('');
   const history = useNavigate();
 
+  const removeErrorMessage = () => {
+    const tagError = document.getElementById('error-message') as HTMLElement;
+    setTimeout(() => {
+      tagError.style.display = 'none';
+      tagError.innerText = '';
+    }, 2500);
+  };
+
+  const displayErrorMessage = (): void => {
+    const tagError = document.getElementById('error-message') as HTMLElement;
+    tagError.style.display = 'inline-block';
+    tagError.innerText = 'Usuário já Existe!';
+    removeErrorMessage();
+  };
+
   const registerUser = async (): Promise<void> => {
     const host = process.env.REACT_APP_BACKEND_HOST;
     try {
@@ -21,7 +36,9 @@ function Register() {
       history('/contacts');
       return;
     }
-    catch (_error) {
+    catch (error) {
+      displayErrorMessage();
+      console.log(error);
       return;
     }
   };
@@ -68,6 +85,7 @@ function Register() {
         >
         Registrar
         </button>
+        <p id='error-message'></p>
         <div id='login-link'>
           Já tem uma conta?
           <Link to='/login'>
