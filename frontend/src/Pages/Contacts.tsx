@@ -9,19 +9,31 @@ function Contacts() {
   const [phoneNumber, setPhoneNumber] = useState<string>();
   const [contacts, setContacts] = useState<any[]>([]);
 
-  const addContact = () => {
-    if (localStorage.getItem('contacts')) {
-      const contacts = JSON.parse(String(localStorage.getItem('contacts'))) as any[];
-      contacts.push({
-        name,
-        phoneNumber,
-      });
-      localStorage.setItem('contacts', JSON.stringify(contacts));
-      setContacts(contacts);
+  const isContactExist = async (): Promise<boolean> => {
+    const host = process.env.REACT_APP_BACKEND_HOST;
+    try {
+      await axios.get(`${host}/user/${phoneNumber}`);
+      return true;
+    } catch (error) {
+      return false;
     }
-    else {
-      localStorage.setItem('contacts', JSON.stringify([{ name, phoneNumber }]));
-      setContacts(JSON.parse(String(localStorage.getItem('contacts'))));
+  };
+
+  const addContact = async () => {
+    if (await isContactExist()) {
+      if (localStorage.getItem('contacts')) {
+        const contacts = JSON.parse(String(localStorage.getItem('contacts'))) as any[];
+        contacts.push({
+          name,
+          phoneNumber,
+        });
+        localStorage.setItem('contacts', JSON.stringify(contacts));
+        setContacts(contacts);
+      }
+      else {
+        localStorage.setItem('contacts', JSON.stringify([{ name, phoneNumber }]));
+        setContacts(JSON.parse(String(localStorage.getItem('contacts'))));
+      }
     }
   };
 

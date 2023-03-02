@@ -58,6 +58,14 @@ function Message() {
     createSocketConnection();
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.close();
+      }
+    };
+  }, []);
+
   return(
     <div>
       <Header/>

@@ -39,6 +39,12 @@ class UserController {
     return this.response.status(201).json({ token: result });
   }
 
+  public async getUser() {
+    const { phoneNumber } = this.request.params;
+    const { error, result } = await this.service.getUser(phoneNumber);
+    if (error) return this.response.status(404).json({ message: error });
+    return this.response.status(200).json({ message: result });
+  }
 
 }
 

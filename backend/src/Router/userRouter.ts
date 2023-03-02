@@ -17,5 +17,8 @@ router.post('/register', [
   (req: Request, res: Response) =>  new UserController(req, res).save()
 ]);
 
+router.get('/user/:phoneNumber', [
+  (req: Request, res: Response) => new UserController(req, res).getUser()
+]);
 
 export default router;

@@ -37,6 +37,13 @@ class UserService {
     const { id, name, phoneNumber } = await this.model.save(user);
     return { error: null, result: jwt.createToken(id, name, phoneNumber) };
   }
+
+  public async getUser(phoneNumber: string): Promise<IResult> {
+    const result = await this.model.getUserByPhone(phoneNumber);
+
+    if (result) return { error: null, result: 'User Found' };
+    return { error: 'User not Found', result: null };
+  }
 }
 
 export default UserService;
