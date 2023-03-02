@@ -9,6 +9,13 @@ function Login() {
   const [ phoneNumber, setPhoneNumber ] = useState<string>('');
   const [ password, setPassword ] = useState<string>('');
 
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter' && isAllFieldsFilledOut()) {
+      validateUser();
+      return;
+    }
+  };
+
   const isAllFieldsFilledOut = () => {
     if (phoneNumber.length >= 12 && password.length >= 4) {
       return true;
@@ -72,6 +79,7 @@ function Login() {
           id='phoneNumber'
           name="phoneNumber" 
           onChange={({ target }) => setPhoneNumber( target.value )}
+          onKeyDown={ handleKeyDown }
         />
         <label htmlFor="password">
           Sua senha:
@@ -82,6 +90,7 @@ function Login() {
           id='password'
           name="password" 
           onChange={({ target }) => setPassword( target.value )}
+          onKeyDown={ handleKeyDown }
         />
         <button
           id='login-button'

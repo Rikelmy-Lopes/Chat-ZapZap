@@ -24,7 +24,7 @@ html, body {
     gap: 15px;
     height: 500px;
     width: 350px;
-    box-shadow: 0px 8px 47px 10px rgba(0, 0, 0, 0.144)
+    box-shadow: 0px 8px 47px 10px rgba(0, 0, 0, 0.144);
 }
 
 #login-button {

@@ -5,7 +5,6 @@ import UserRoomModel from '../Model/UserRoomModel';
 const userRoom = new UserRoomModel();
 
 export default function(socket: Socket, io: Server) {
-
   socket.on('chat', async ({ phoneNumber1, phoneNumber2 }) => {
     let roomId = await userRoom.getRoom(phoneNumber1, phoneNumber2);
     if(roomId) {
@@ -16,10 +15,10 @@ export default function(socket: Socket, io: Server) {
     }
     roomId = await userRoom.getRoom(phoneNumber1, phoneNumber2);
     const encryptedRoomId = encryptRoomId(String(roomId));
-    socket.emit('roomId', encryptedRoomId);
+    socket.emit('roomId-send', encryptedRoomId);
   });
     
-  socket.on('message', ({ message, hashRoomId }) => {
+  socket.on('message-send', ({ message, hashRoomId }) => {
     const decryptedRoomId =  decryptRoomId(hashRoomId);
     io.to(String(decryptedRoomId)).emit('message-receive', message);
   });

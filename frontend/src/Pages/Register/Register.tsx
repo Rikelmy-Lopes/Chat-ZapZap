@@ -9,6 +9,13 @@ function Register() {
   const [ password, setPassword ] = useState<string>('');
   const history = useNavigate();
 
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter' && isAllFieldsFilledOut()) {
+      registerUser();
+      return;
+    }
+  };
+
   const removeErrorMessage = () => {
     const tagError = document.getElementById('error-message') as HTMLElement;
     setTimeout(() => {
@@ -43,9 +50,11 @@ function Register() {
     }
   };
 
-  const isPhoneNumberValid = (): boolean => {
-    const regex = /^\+\d{2}\d{11}$/;
-    return !regex.test(phoneNumber);
+  const isAllFieldsFilledOut = () => {
+    if (phoneNumber.length >= 12 && password.length >= 6 && name.length >= 4) {
+      return true;
+    }
+    return false;
   };
 
   return(
@@ -59,6 +68,7 @@ function Register() {
           type="text" 
           id='phoneNumber'
           onChange={ ({ target }) => setPhoneNumber(target.value) }
+          onKeyDown={ handleKeyDown }
         />
         <label htmlFor="name">
           Nome:
@@ -68,6 +78,7 @@ function Register() {
           placeholder='Seu nome' 
           type="text"
           onChange={ ({ target }) => setName(target.value) }
+          onKeyDown={ handleKeyDown }
         />
         <label htmlFor="password">
           Senha:
@@ -77,10 +88,11 @@ function Register() {
           placeholder="**********" 
           type="password" 
           onChange={ ({ target }) => setPassword(target.value) }
+          onKeyDown={ handleKeyDown }
         />
         <button
           id='register-button'
-          disabled={ isPhoneNumberValid()}
+          disabled={ !isAllFieldsFilledOut()}
           onClick={ registerUser }
         >
         Registrar

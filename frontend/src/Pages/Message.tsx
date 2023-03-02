@@ -11,12 +11,19 @@ function Message() {
   const socketRef = useRef<Socket>();
   const history = useNavigate();
 
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      sendMessage();
+      return;
+    }
+  };
+
   const createSocketConnection = () => {
     if (!socketRef.current && localStorage.getItem('user')) {
       socketRef.current = io('http://192.168.0.189:4000');
       openChat();
-      socketRef.current.on('roomId', (hashRoomId) => {
-        setHashRoomId(hashRoomId);
+      socketRef.current.on('roomId-send', (hash) => {
+        setHashRoomId(hash);
       });
       socketRef.current.on('message-receive', (message) => {
         addMessage(message);
@@ -52,7 +59,8 @@ function Message() {
   };
 
   const sendMessage = () => {
-    socketRef.current?.emit('message', { message, hashRoomId });
+    socketRef.current?.emit('message-send', { message, hashRoomId });
+    setMessage('');
   };
 
   useEffect(() => {
@@ -75,10 +83,12 @@ function Message() {
       <input
         placeholder='Digite sua mensagem'
         type="text" 
-        name="" 
+        value={ message }
         onChange={({ target }) => setMessage(target.value)}
+        onKeyDown={ handleKeyDown }
       />
       <button
+        disabled={ !message ? true : false}
         onClick={ sendMessage }
       >
           Enviar
