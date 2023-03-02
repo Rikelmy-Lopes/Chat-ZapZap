@@ -1,5 +1,6 @@
 import { Server } from 'socket.io';
 import { Socket } from 'socket.io/dist/socket';
+import { decryptRoomId, encryptRoomId } from '../Utils/CryptoJs';
 import UserRoomModel from '../Model/UserRoomModel';
 const userRoom = new UserRoomModel();
 
@@ -14,11 +15,13 @@ export default function(socket: Socket, io: Server) {
       socket.join(String(roomId));
     }
     roomId = await userRoom.getRoom(phoneNumber1, phoneNumber2);
-    socket.emit('roomId', roomId);
+    const encryptedRoomId = encryptRoomId(String(roomId));
+    socket.emit('roomId', encryptedRoomId);
   });
     
-  socket.on('message', ({ message, roomId }) => {
-    io.to(String(roomId)).emit('message-receive', message);
+  socket.on('message', ({ message, hashRoomId }) => {
+    const decryptedRoomId =  decryptRoomId(hashRoomId);
+    io.to(String(decryptedRoomId)).emit('message-receive', message);
   });
 
 }

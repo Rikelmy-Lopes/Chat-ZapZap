@@ -6,7 +6,7 @@ import Header from '../Components/Header/Header';
 
 function Message() {
   const [ message, setMessage ] = useState<string>();
-  const [ roomId, setRoomId ] = useState<string>(); 
+  const [ hashRoomId, setHashRoomId ] = useState<string>(); 
   const { userPhone } = useParams();
   const socketRef = useRef<Socket>();
   const history = useNavigate();
@@ -15,8 +15,8 @@ function Message() {
     if (!socketRef.current && localStorage.getItem('user')) {
       socketRef.current = io('http://192.168.0.189:4000');
       openChat();
-      socketRef.current.on('roomId', (roomId) => {
-        setRoomId(roomId);
+      socketRef.current.on('roomId', (hashRoomId) => {
+        setHashRoomId(hashRoomId);
       });
       socketRef.current.on('message-receive', (message) => {
         addMessage(message);
@@ -52,7 +52,7 @@ function Message() {
   };
 
   const sendMessage = () => {
-    socketRef.current?.emit('message', { message, roomId });
+    socketRef.current?.emit('message', { message, hashRoomId });
   };
 
   useEffect(() => {
