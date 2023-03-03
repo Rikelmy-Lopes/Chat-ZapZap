@@ -1,0 +1,33 @@
+
+#contact-container {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 200px;
+    padding-top: 20px;
+    height: 100%;
+    width: 100%;
+}
+
+#add-contact-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    height: 500px;
+    width: 350px;
+    box-shadow: 0px 8px 47px 10px rgba(0, 0, 0, 0.144);
+}
+
+#contacts-list {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-content: flex-start;
+    flex-wrap: wrap;
+    flex-direction: row;
+    height: 600px;
+    width: 500px;
+}

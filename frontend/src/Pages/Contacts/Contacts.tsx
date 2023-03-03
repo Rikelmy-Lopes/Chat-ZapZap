@@ -1,8 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Header from '../Components/Header/Header';
-import { IContact, IUser } from '../Interface/Interfaces';
+import Header from '../../Components/Header/Header';
+import { IContact, IUser } from '../../Interface/Interfaces';
+import './Contacts.css';
 
 function Contacts() {
   const history = useNavigate();
@@ -70,33 +71,39 @@ function Contacts() {
   return(
     <div>
       <Header/>
-      <input
-        placeholder='Nome'
-        type="text" 
-        name="" 
-        onChange={ ({ target }) => setName(target.value) }
-      />
-      <input
-        placeholder='Exemplo: +5538123456789'
-        type="text" 
-        name="" 
-        onChange={ ({ target }) => setPhoneNumber(target.value) }
-      />
-      <button
-        onClick={ addContact }
-      >
+      <div id='contact-container'>
+        <div id='add-contact-container'>
+          <label htmlFor="contact-name">Nome do Contato:</label>
+          <input
+            placeholder='Nome'
+            type="text" 
+            id='contact-name'
+            onChange={ ({ target }) => setName(target.value) }
+          />
+          <label htmlFor="contact-phoneNumber">Número do Contato:</label>
+          <input
+            placeholder='Exemplo: +5538123456789'
+            type="text" 
+            id='contact-phoneNumber'
+            onChange={ ({ target }) => setPhoneNumber(target.value) }
+          />
+          <button
+            onClick={ addContact }
+          >
           Adicionar Contato
-      </button>
-      <h3>Contatos</h3>
-      <div id='contacts-container'>
-        { contacts.map((contact) => (
-          <Link
-            id='contacts'  key={`${contact.phoneNumber}`} to={`/message/${contact.phoneNumber}`}>
-            <span> Nome: <strong>{ contact.name }</strong> </span>
-            <span> PhoneNumber: { contact.phoneNumber } </span>
-          </Link>
-        ))
-        }
+          </button>
+        </div>
+        <div id='contacts-list'>
+          {/* <h3>Contatos</h3> */}
+          { contacts.map((contact) => (
+            <Link
+              id='contacts'  key={`${contact.phoneNumber}`} to={`/message/${contact.phoneNumber}`}>
+              <span> Nome: <strong>{ contact.name }</strong> </span>
+              <span> PhoneNumber: { contact.phoneNumber } </span>
+            </Link>
+          ))
+          }
+        </div>
       </div>
     </div>
   );
