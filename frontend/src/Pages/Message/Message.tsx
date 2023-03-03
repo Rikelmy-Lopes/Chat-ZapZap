@@ -39,8 +39,8 @@ function Message() {
       socketRef.current.on('roomId-send', (hash: string) => {
         setHashRoomId(hash);
       });
-      socketRef.current.on('message-receive', ({ message, userName }: IMessageReceive) => {
-        addMessage(message, userName);
+      socketRef.current.on('message-receive', ({ message, userName, hour }: IMessageReceive) => {
+        addMessage(message, userName, hour);
       });
     }
   };
@@ -61,10 +61,17 @@ function Message() {
     }
   };
 
-  const addMessage = (message: string, userName: string): void => {
+  const addMessage = (message: string, userName: string, hour: string): void => {
     const divMessages: HTMLElement | null  = document.getElementById('messages');
     if (!divMessages) return;
-    divMessages.innerHTML += `<span> <strong>${ userName }</strong>: ${ message } </span>`;
+    divMessages.innerHTML += `
+    <div class="message">
+    <div class="name">${ userName }:</div>
+    <div class="content">
+        <div class="text">${ message }</div>
+        <div class="time">${ hour }</div>
+    </div>
+  </div>`;
     autoScroll();
   };
 
@@ -92,11 +99,11 @@ function Message() {
       }
     };
   }, []);
-
   return(
-    <div>
+    <div id='message-container'>
       <Header/>
       <h2>Conversando com: { getChatWithName() }</h2>
+      <div id='messages'> </div>
       <input
         placeholder='Digite sua mensagem'
         type="text" 
@@ -110,10 +117,6 @@ function Message() {
       >
           Enviar
       </button>
-
-      <div id='messages'>
-
-      </div>
     </div>
   );
 }

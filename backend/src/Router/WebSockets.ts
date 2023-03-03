@@ -21,8 +21,10 @@ export default function(socket: Socket, io: Server): void {
   });
     
   socket.on('message-send', ({ message, hashRoomId, userName }) => {
+    const date = new Date();
+    const hour = `${date.getHours()}:${date.getMinutes()}`;
     const decryptedRoomId: string =  decryptRoomId(hashRoomId);
-    io.to(String(decryptedRoomId)).emit('message-receive', { message, userName });
+    io.to(String(decryptedRoomId)).emit('message-receive', { message, userName, hour });
   });
 
 }

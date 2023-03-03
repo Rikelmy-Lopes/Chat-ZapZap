@@ -20,4 +20,5 @@ export interface IApiResponseToken {
 export interface IMessageReceive {
     message: string
     userName: string
+    hour: string
 }
