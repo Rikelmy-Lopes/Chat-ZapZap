@@ -100,23 +100,27 @@ function Message() {
     };
   }, []);
   return(
-    <div id='message-container'>
+    <div id='container-m'>
       <Header/>
-      <h2>Conversando com: { getChatWithName() }</h2>
-      <div id='messages'> </div>
-      <input
-        placeholder='Digite sua mensagem'
-        type="text" 
-        value={ message }
-        onChange={({ target }) => setMessage(target.value)}
-        onKeyDown={ handleKeyDown }
-      />
-      <button
-        disabled={ !message ? true : false}
-        onClick={ sendMessage }
-      >
+      <div id='message-container'>
+        <h2>Conversando com: { getChatWithName() }</h2>
+        <div id='messages'> </div>
+        <div id='container-send-message'>
+          <input
+            placeholder='Digite sua mensagem'
+            type="text" 
+            value={ message }
+            onChange={({ target }) => setMessage(target.value)}
+            onKeyDown={ handleKeyDown }
+          />
+          <button
+            disabled={ !message ? true : false}
+            onClick={ sendMessage }
+          >
           Enviar
-      </button>
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

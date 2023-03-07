@@ -94,10 +94,10 @@ function Contacts() {
           </button>
         </div>
         <div id='contacts-list'>
-          {/* <h3>Contatos</h3> */}
+          <h3>Contatos</h3>
           { contacts.map((contact) => (
             <Link
-              id='contacts'  key={`${contact.phoneNumber}`} to={`/message/${contact.phoneNumber}`}>
+              id='contact'  key={`${contact.phoneNumber}`} to={`/message/${contact.phoneNumber}`}>
               <span> Nome: <strong>{ contact.name }</strong> </span>
               <span> PhoneNumber: { contact.phoneNumber } </span>
             </Link>
