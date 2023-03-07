@@ -1,9 +1,14 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('user_messages', {
+      id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },  
       user_id: {
         allowNull: false,
-        primaryKey: true,
         type: Sequelize.INTEGER,
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
@@ -14,7 +19,6 @@ module.exports = {
       },
       room_id: {
         allowNull: false,
-        primaryKey: true,
         type: Sequelize.INTEGER,
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
@@ -28,9 +32,9 @@ module.exports = {
         type: Sequelize.STRING,
       },
       created_at: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('NOW()'),
+        defaultValue: Sequelize.fn('NOW')
       }
     });
   },

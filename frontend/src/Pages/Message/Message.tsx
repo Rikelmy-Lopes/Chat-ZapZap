@@ -82,8 +82,8 @@ function Message() {
   };
 
   const sendMessage = (): void => {
-    const { name }: IUser = JSON.parse(String(localStorage.getItem('user')));
-    socketRef.current?.emit('message-send', { message, hashRoomId, userName: name });
+    const { name, phoneNumber }: IUser = JSON.parse(String(localStorage.getItem('user')));
+    socketRef.current?.emit('message-send', { message, hashRoomId, userName: name, phoneNumber });
     setMessage('');
   };
 

@@ -4,7 +4,8 @@ import 'dotenv/config';
 import http from 'http';
 import { Server, Socket } from 'socket.io';
 const serverSocketIo = http.createServer();
-import socketRoutes from './Router/WebSockets';
+import socketChat from './Router/SocketChat';
+import socketMessage from './Router/SocketMessage';
 const io = new Server(serverSocketIo, {
   cors: {
     origin: '*'
@@ -23,7 +24,9 @@ if (networkInterfaces.wlp1s0) {
 io.on('connection', (socket: Socket) => {
   console.log('Socket conectado', socket.id);
 
-  socketRoutes(socket, io);
+  socketChat(socket);
+
+  socketMessage(socket, io);
 
   socket.on('disconnect', () => {
     console.log('Usuário desconectado', socket.id);

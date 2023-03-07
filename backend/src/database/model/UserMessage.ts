@@ -36,7 +36,7 @@ UserMessage.init({
   },
   createdAt: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: true,
   }
 }, {
   underscored: true,

@@ -13,7 +13,7 @@ function Header() {
 
   useEffect((): void => {
     const user: IUser = JSON.parse(String(localStorage.getItem('user')));
-    setUserName(user.name);
+    setUserName(user?.name);
   }, []);
   
   return(

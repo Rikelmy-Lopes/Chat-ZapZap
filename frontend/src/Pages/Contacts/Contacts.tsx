@@ -49,7 +49,7 @@ function Contacts() {
 
   const validateToken = async (): Promise<void> => {
     const host = process.env.REACT_APP_BACKEND_HOST;
-    const { token }: IUser = JSON.parse(String(localStorage.getItem('user')));
+    const { token }: IUser = JSON.parse(String(localStorage.getItem('user'))) || {};
     try {
       await axios.post(`${host}/login/token`, {
         token
