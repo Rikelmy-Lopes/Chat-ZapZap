@@ -1,15 +1,15 @@
 import { DataTypes , Model } from 'sequelize';
 import db from '.';
-import UsersModel from './Users';
+import UsersModel from './User';
 
 
-class UsersRoomModel extends Model {
+class UserRoom extends Model {
   declare roomId: number;
   declare userId1: number;
   declare userId2: string;
 }
 
-UsersRoomModel.init({
+UserRoom.init({
   roomId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -40,14 +40,14 @@ UsersRoomModel.init({
   
 });
 
-UsersRoomModel.belongsTo(UsersModel, {
+UserRoom.belongsTo(UsersModel, {
   as: 'user1',
   foreignKey: 'userId1'
 });
 
-UsersRoomModel.belongsTo(UsersModel, {
+UserRoom.belongsTo(UsersModel, {
   as: 'user2',
   foreignKey: 'userId2'
 });
 
-export default UsersRoomModel;
+export default UserRoom;

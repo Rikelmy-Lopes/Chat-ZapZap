@@ -1,7 +1,7 @@
 import { Server } from 'socket.io';
 import { Socket } from 'socket.io/dist/socket';
 import { decryptRoomId } from '../Utils/CryptoJs';
-import UserMessageModel from '../Model/UserMessage';
+import UserMessageModel from '../Model/UserMessageModel';
 
 export default (socket: Socket, io: Server) => {
   const userMessageModel = new UserMessageModel();

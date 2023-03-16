@@ -1,21 +1,21 @@
-import UsersRoomModel from '../database/model/UsersRoom';
+import UserRoom from '../database/model/UserRoom';
+import User from '../database/model/User';
 import UserModel from './UserModel';
 import { Op } from 'sequelize';
-import UsersModel from '../database/model/Users';
 
 class UserRoomModel {
-  private model: typeof UsersRoomModel;
+  private model: typeof UserRoom;
   private userModel: UserModel;
 
   constructor () {
-    this.model = UsersRoomModel;
+    this.model = UserRoom;
     this.userModel = new UserModel();
   }
 
   public async getRoom(phoneNumber1: string, phoneNumber2: string): Promise<string | undefined> {
-    const room = await UsersRoomModel.findOne({
+    const room = await UserRoom.findOne({
       include: [
-        { model: UsersModel, 
+        { model: User, 
           as: 'user1', 
           attributes: ['phoneNumber'],
           where: {
@@ -23,7 +23,7 @@ class UserRoomModel {
               [Op.or]: [phoneNumber1, phoneNumber2]
             }
           } },
-        { model: UsersModel, 
+        { model: User, 
           as: 'user2', 
           attributes: ['phoneNumber'],
           where: {
@@ -38,11 +38,11 @@ class UserRoomModel {
   }
 
   public async createRoom(phoneNumber1: string, phoneNumber2: string): Promise<string | undefined> {
-    const user1: UsersModel | null = await this.userModel.getUserByPhone(phoneNumber1);
-    const user2:UsersModel | null = await this.userModel.getUserByPhone(phoneNumber2);
+    const user1: User | null = await this.userModel.getUserByPhone(phoneNumber1);
+    const user2: User | null = await this.userModel.getUserByPhone(phoneNumber2);
 
     if (user1 && user2) {
-      const { roomId }: UsersRoomModel = await this.model.create({ userId1: user1.id, userId2: user2.id });
+      const { roomId }: UserRoom = await this.model.create({ userId1: user1.id, userId2: user2.id });
       return String(roomId);
     }
     return;

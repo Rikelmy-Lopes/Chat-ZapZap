@@ -1,23 +1,23 @@
+import User from '../database/model/User';
 import { IUser } from '../Interface/UserInterface';
-import Users from '../database/model/Users';
 import { encryptPassword } from '../Utils/BCrypt';
 
 
 class UserModel {
-  private model: typeof Users;
+  private model: typeof User;
 
   constructor() {
-    this.model = Users;
+    this.model = User;
   }
 
-  public async getUserByPhone(phoneNumber: string): Promise<Users | null> {
-    const result: Users | null = await this.model.findOne({ where: { phoneNumber }});
+  public async getUserByPhone(phoneNumber: string): Promise<User | null> {
+    const result: User | null = await this.model.findOne({ where: { phoneNumber }});
 
     return result;
   }
 
-  public async save(user: IUser): Promise<Users> {
-    const result: Users = await this.model.create({
+  public async save(user: IUser): Promise<User> {
+    const result: User = await this.model.create({
       name: user.name,
       password: await encryptPassword(user.password),
       phoneNumber: user.phoneNumber

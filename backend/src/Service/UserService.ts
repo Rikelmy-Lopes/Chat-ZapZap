@@ -2,7 +2,7 @@ import { IUser, IResult, IUserResponse } from './../Interface/UserInterface';
 import * as jwt from '../Utils/JWT';
 import UserModel from '../Model/UserModel';
 import { checkPassword } from '../Utils/BCrypt';
-import UsersModel from '../database/model/Users';
+import UsersModel from '../database/model/User';
 
 class UserService {
   private model: UserModel;

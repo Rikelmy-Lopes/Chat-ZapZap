@@ -2,14 +2,14 @@ import { DataTypes , Model } from 'sequelize';
 import db from '.';
 
 
-class UsersModel extends Model {
+class User extends Model {
   declare id: number;
   declare name: string;
   declare phoneNumber: string;
   declare password: string;
 }
 
-UsersModel.init({
+User.init({
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -36,4 +36,4 @@ UsersModel.init({
   
 });
 
-export default UsersModel;
+export default User;

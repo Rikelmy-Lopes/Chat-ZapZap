@@ -1,5 +1,5 @@
 import UserMessage from '../database/model/UserMessage';
-import Users from '../database/model/Users';
+import User from '../database/model/User';
 import UserModel from './UserModel';
 
 class UserMessageModel {
@@ -12,7 +12,7 @@ class UserMessageModel {
   }
 
   public async saveMessage(message: string, roomId: string, phoneNumber: string) {
-    const { id } = await this.userModel.getUserByPhone(phoneNumber) as Users;
+    const { id } = await this.userModel.getUserByPhone(phoneNumber) as User;
     this.model.create({ userId: id, roomId, message });
   }
 }
