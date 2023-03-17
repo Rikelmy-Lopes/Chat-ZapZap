@@ -4,8 +4,8 @@ module.exports = {
       room_id: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
+        type: Sequelize.STRING,
+        autoIncrement: false,
       },
       user_id1: {
         allowNull: false,

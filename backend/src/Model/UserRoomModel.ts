@@ -2,6 +2,7 @@ import UserRoom from '../database/model/UserRoom';
 import User from '../database/model/User';
 import UserModel from './UserModel';
 import { Op } from 'sequelize';
+import { v4 as uuidv4 } from 'uuid';
 
 class UserRoomModel {
   private model: typeof UserRoom;
@@ -40,9 +41,12 @@ class UserRoomModel {
   public async createRoom(phoneNumber1: string, phoneNumber2: string): Promise<string | undefined> {
     const user1: User | null = await this.userModel.getUserByPhone(phoneNumber1);
     const user2: User | null = await this.userModel.getUserByPhone(phoneNumber2);
-
     if (user1 && user2) {
-      const { roomId }: UserRoom = await this.model.create({ userId1: user1.id, userId2: user2.id });
+      const { roomId }: UserRoom = await this.model.create({ 
+        roomId: uuidv4(), 
+        userId1: user1.id, 
+        userId2: user2.id });
+
       return String(roomId);
     }
     return;

@@ -19,7 +19,7 @@ module.exports = {
       },
       room_id: {
         allowNull: false,
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
         references: {
