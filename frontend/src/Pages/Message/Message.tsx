@@ -1,15 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { io, Socket } from 'socket.io-client';
-import axios from 'axios';
-import Header from '../../Components/Header/Header';
 import './Message.css';
 import { IContact, IMessageReceive, IUser } from '../../Interface/Interfaces';
 
-function Message() {
-  const history = useNavigate();
+function Message({ selectedPhone }: any) {
   const socketRef = useRef<Socket>();
-  const { userPhone } = useParams();
   const [ message, setMessage ] = useState<string>('');
   const [ hashRoomId, setHashRoomId ] = useState<string>(''); 
 
@@ -21,7 +17,7 @@ function Message() {
 
   const getChatWithName = (): string | undefined => {
     const contacts = JSON.parse(String(localStorage.getItem('contacts'))) as IContact[];
-    const contact: IContact | undefined = contacts.find((contact) => contact.phoneNumber === userPhone);
+    const contact: IContact | undefined = contacts.find((contact) => contact.phoneNumber === selectedPhone);
     return contact?.name;
   };
 
@@ -45,22 +41,6 @@ function Message() {
     }
   };
 
-  const validateToken = async (): Promise<void> => {
-    const host = process.env.REACT_APP_BACKEND_HOST;
-    const { token }: IUser = JSON.parse(String(localStorage.getItem('user')));
-    try {
-      await axios.post(`${host}/login/token`, {
-        token
-      });
-      return;
-    }
-    catch(error) {
-      localStorage.removeItem('user');
-      history('/login');
-      return;
-    }
-  };
-
   const addMessage = (message: string, userName: string, hour: string): void => {
     const divMessages: HTMLElement | null  = document.getElementById('messages');
     if (!divMessages) return;
@@ -75,10 +55,15 @@ function Message() {
     autoScroll();
   };
 
+  const deleteMessages = () => {
+    const messagesDiv = document.getElementById('messages') as HTMLElement;
+    messagesDiv.innerHTML = '';
+  };
+
   const openChat = (): void => {
     if (!localStorage.getItem('user')) return;
     const { phoneNumber }: IUser = JSON.parse(String(localStorage.getItem('user')));
-    socketRef.current?.emit('chat', { phoneNumber1: userPhone, phoneNumber2: phoneNumber});
+    socketRef.current?.emit('chat', { phoneNumber1: selectedPhone, phoneNumber2: phoneNumber});
   };
 
   const sendMessage = (): void => {
@@ -87,10 +72,18 @@ function Message() {
     setMessage('');
   };
 
-  useEffect((): void => {
-    validateToken();
+  const manageSocketConnection = () => {
+    if (socketRef.current) {
+      socketRef.current.close();
+      socketRef.current = undefined;
+    }
+    deleteMessages();
     createSocketConnection();
-  }, []);
+  };
+
+  useEffect(() => {
+    manageSocketConnection();
+  }, [selectedPhone]);
 
   useEffect(() => {
     return () => {
@@ -99,9 +92,9 @@ function Message() {
       }
     };
   }, []);
+
   return(
     <div id='container-m'>
-      <Header/>
       <div id='message-container'>
         <h2>Conversando com: { getChatWithName() }</h2>
         <div id='messages'> </div>

@@ -20,11 +20,14 @@ function Header() {
     <header>
       <p>Nome: { userName }</p>
       {
-        pathname.includes('/message/') ? 
+        pathname.includes('/chats') ? 
           <Link to='/contacts'>
         Contatos
           </Link>
-          : null
+          : 
+          <Link to='/chats'>
+          Chats
+          </Link>
       }
       <Link
         to='/login'

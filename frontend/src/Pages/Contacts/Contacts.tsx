@@ -1,51 +1,15 @@
-import axios from 'axios';
-import React, { useEffect, useState} from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import Header from '../../Components/Header/Header';
+import React, { useEffect, useState } from 'react';
 import { IContact, IUser } from '../../Interface/Interfaces';
+import axios from 'axios';
 import './Contacts.css';
+import Header from '../../Components/Header/Header';
+import { useNavigate } from 'react-router-dom';
 
 function Contacts() {
   const history = useNavigate();
   const [name, setName] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [contacts, setContacts] = useState<IContact[]>([]);
-
-  const isContactExist = async (): Promise<boolean> => {
-    const host = process.env.REACT_APP_BACKEND_HOST;
-    try {
-      await axios.get(`${host}/user/${phoneNumber}`);
-      return true;
-    } catch (error) {
-      return false;
-    }
-  };
-
-  const addContact = async (): Promise<void> => {
-    if (await isContactExist()) {
-      if (localStorage.getItem('contacts')) {
-        const contacts: IContact[] = JSON.parse(String(localStorage.getItem('contacts')));
-        contacts.push({
-          name,
-          phoneNumber,
-        });
-        localStorage.setItem('contacts', JSON.stringify(contacts));
-        setContacts(contacts);
-      }
-      else {
-        localStorage.setItem('contacts', JSON.stringify([{ name, phoneNumber }]));
-        setContacts(JSON.parse(String(localStorage.getItem('contacts'))));
-      }
-    }
-  };
-
-  const retrieveContacts = (): void => {
-    if (localStorage.getItem('contacts')) {
-      setContacts(JSON.parse(String(localStorage.getItem('contacts'))));
-      return;
-    }
-    return;
-  };
 
   const validateToken = async (): Promise<void> => {
     const host = process.env.REACT_APP_BACKEND_HOST;
@@ -63,15 +27,82 @@ function Contacts() {
     }
   };
 
+  const isContactExist = async (): Promise<boolean> => {
+    const host = process.env.REACT_APP_BACKEND_HOST;
+    try {
+      await axios.get(`${host}/user/${phoneNumber}`);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  const isContactAlreadySaved = (): boolean => {
+    const contacts: IContact[] = JSON.parse(String(localStorage.getItem('contacts')));
+    return contacts.some((contact) => contact.phoneNumber === phoneNumber);
+  };
+
+  const addContact = async (): Promise<void> => {
+    if (isContactAlreadySaved()) return;
+    if (!(await isContactExist())) return;
+    if (localStorage.getItem('contacts')) {
+      const contacts: IContact[] = JSON.parse(String(localStorage.getItem('contacts')));
+      contacts.push({
+        name,
+        phoneNumber,
+      });
+      localStorage.setItem('contacts', JSON.stringify(contacts));
+      setContacts(contacts);
+    }
+    else {
+      localStorage.setItem('contacts', JSON.stringify([{ name, phoneNumber }]));
+      setContacts(JSON.parse(String(localStorage.getItem('contacts'))));
+    }
+    retrieveContacts();
+  };
+
+  const retrieveContacts = (): void => {
+    if (localStorage.getItem('contacts')) {
+      setContacts(JSON.parse(String(localStorage.getItem('contacts'))));
+      return;
+    }
+    return;
+  };
+
+  const deleteContact = (phoneNumber: string): void => {
+    const contacts: IContact[] = JSON.parse(String(localStorage.getItem('contacts')));
+    const filteredContacts = contacts.filter((contact) => contact.phoneNumber !== phoneNumber);
+    localStorage.setItem('contacts', JSON.stringify(filteredContacts));
+    retrieveContacts();
+  };
+
   useEffect((): void => {
     validateToken();
     retrieveContacts();
   }, []);
 
+
   return(
-    <div>
-      <Header/>
+    <div id='main-container'>
+      <Header />
       <div id='contact-container'>
+        <div>
+          { contacts.map((contact, index) => (
+            <button
+              id='contact'
+              key={`${index}`}
+            >
+              <span> Nome: <strong>{ contact.name }</strong> </span>
+              <span> Numero de Telefone: { contact.phoneNumber } </span>
+              <button
+                onClick={ () => deleteContact(contact.phoneNumber)}
+              >
+                Deletar
+              </button>
+            </button>
+          ))
+          }
+        </div>
         <div id='add-contact-container'>
           <label htmlFor="contact-name">Nome do Contato:</label>
           <input
@@ -92,18 +123,7 @@ function Contacts() {
           >
           Adicionar Contato
           </button>
-        </div>
-        <div id='contacts-list'>
-          <h3>Contatos</h3>
-          { contacts.map((contact) => (
-            <Link
-              id='contact'  key={`${contact.phoneNumber}`} to={`/message/${contact.phoneNumber}`}>
-              <span> Nome: <strong>{ contact.name }</strong> </span>
-              <span> PhoneNumber: { contact.phoneNumber } </span>
-            </Link>
-          ))
-          }
-        </div>
+        </div> 
       </div>
     </div>
   );
