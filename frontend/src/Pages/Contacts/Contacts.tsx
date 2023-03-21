@@ -4,28 +4,13 @@ import axios from 'axios';
 import './Contacts.css';
 import Header from '../../Components/Header/Header';
 import { useNavigate } from 'react-router-dom';
+import { validateToken  } from '../../Utils/Auth';
 
 function Contacts() {
   const history = useNavigate();
   const [name, setName] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [contacts, setContacts] = useState<IContact[]>([]);
-
-  const validateToken = async (): Promise<void> => {
-    const host = process.env.REACT_APP_BACKEND_HOST;
-    const { token }: IUser = JSON.parse(String(localStorage.getItem('user'))) || {};
-    try {
-      await axios.post(`${host}/login/token`, {
-        token
-      });
-      return;
-    }
-    catch(_error) {
-      localStorage.removeItem('user');
-      history('/login');
-      return;
-    }
-  };
 
   const isContactExist = async (): Promise<boolean> => {
     const host = process.env.REACT_APP_BACKEND_HOST;
@@ -77,7 +62,7 @@ function Contacts() {
   };
 
   useEffect((): void => {
-    validateToken();
+    validateToken(history);
     retrieveContacts();
   }, []);
 
@@ -88,7 +73,7 @@ function Contacts() {
       <div id='contact-container'>
         <div>
           { contacts.map((contact, index) => (
-            <button
+            <div
               id='contact'
               key={`${index}`}
             >
@@ -99,7 +84,7 @@ function Contacts() {
               >
                 Deletar
               </button>
-            </button>
+            </div>
           ))
           }
         </div>

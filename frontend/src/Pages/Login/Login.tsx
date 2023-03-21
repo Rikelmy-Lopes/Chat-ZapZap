@@ -56,7 +56,7 @@ function Login() {
         password,
       });
       localStorage.setItem('user', JSON.stringify(data));
-      history('/contacts');
+      history('/chats');
       return;
     } catch (error) {
       displayErrorMessage(error as AxiosError<IApiResponseMessage>);
@@ -66,7 +66,7 @@ function Login() {
 
   useEffect((): void => {
     if (pathname === '/') history('/login');
-    if (localStorage.getItem('user')) history('/contacts');
+    if (localStorage.getItem('user')) history('/chats');
   }, []);
   
 

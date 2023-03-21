@@ -1,10 +1,10 @@
-import axios from 'axios';
 import React, { useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../Components/Header/Header';
-import { IContact, IUser } from '../../Interface/Interfaces';
+import { IContact } from '../../Interface/Interfaces';
 import './Chats.css';
 import Message from '../Message/Message';
+import { validateToken  } from '../../Utils/Auth';
 
 function Chats() {
   const history = useNavigate();
@@ -20,24 +20,8 @@ function Chats() {
     return;
   };
 
-  const validateToken = async (): Promise<void> => {
-    const host = process.env.REACT_APP_BACKEND_HOST;
-    const { token }: IUser = JSON.parse(String(localStorage.getItem('user'))) || {};
-    try {
-      await axios.post(`${host}/login/token`, {
-        token
-      });
-      return;
-    }
-    catch(_error) {
-      localStorage.removeItem('user');
-      history('/login');
-      return;
-    }
-  };
-
   useEffect((): void => {
-    validateToken();
+    validateToken(history);
     retrieveContacts();
   }, []);
 
