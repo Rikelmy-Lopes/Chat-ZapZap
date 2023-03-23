@@ -23,7 +23,7 @@ function Contacts() {
   };
 
   const isContactAlreadySaved = (): boolean => {
-    const contacts: IContact[] = JSON.parse(String(localStorage.getItem('contacts')));
+    const contacts: IContact[] = JSON.parse(String(localStorage.getItem('contacts'))) || [];
     return contacts.some((contact) => contact.phoneNumber === phoneNumber);
   };
 

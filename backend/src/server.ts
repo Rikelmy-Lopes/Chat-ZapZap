@@ -33,5 +33,5 @@ io.on('connection', (socket: Socket) => {
   });
 });
 
-serverSocketIo.listen(4000, () => console.log(`Running server SocketIo on: ${ip}:${4000}`));
-app.listen(Number(PORT), () => console.log(`Running server Express on: ${ip}:${PORT}`));
+serverSocketIo.listen(4000, () => console.log(`Running server SocketIo on: http://${ip}:${4000}`));
+app.listen(Number(PORT), () => console.log(`Running server Express on: http://${ip}:${PORT}`));
