@@ -3,6 +3,7 @@ import cors from 'cors';
 import path from 'path';
 import ejs from 'ejs';
 import userRouter from './Router/userRouter';
+import messageRouter from './Router/MessageRouter';
 
 const app = express();
 
@@ -11,6 +12,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use(userRouter);
+
+app.use(messageRouter);
 
 
 app.use(express.static(path.join(__dirname, 'public')));

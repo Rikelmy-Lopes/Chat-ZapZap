@@ -37,12 +37,12 @@ function Register() {
   const registerUser = async (): Promise<void> => {
     const host = process.env.REACT_APP_BACKEND_HOST;
     try {
-      const { data: { token } }: { data: IApiResponseToken } = await axios.post(`${host}/register`, {
+      const { data } = await axios.post(`${host}/register`, {
         phoneNumber,
         name,
         password,
       });
-      localStorage.setItem('token', JSON.stringify(token));
+      localStorage.setItem('user', JSON.stringify(data));
       history('/contacts');
       return;
     }

@@ -1,6 +1,7 @@
 import UserMessage from '../database/model/UserMessage';
 import User from '../database/model/User';
 import UserModel from './UserModel';
+import { IMessage } from '../Interface/UserInterface';
 
 class UserMessageModel {
   private model: typeof UserMessage;
@@ -16,8 +17,18 @@ class UserMessageModel {
     this.model.create({ userId: id, roomId, message });
   }
 
-  public async getMessages(roomId: string) {
-    const messages = await this.model.findAll({ where: { roomId }});
+  public async getMessage(roomId: string): Promise<IMessage[]> {
+    const messages = await this.model.findAll({
+      where: { roomId },
+      order: [
+        ['createdAt', 'ASC']
+      ],
+      attributes: { exclude: ['userId', 'roomId', ] },
+      include: [
+        { model: User, as: 'user', attributes: ['name']}
+      ]
+    }) as unknown;
+    return messages as IMessage[];
   }
 }
 

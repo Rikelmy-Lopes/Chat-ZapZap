@@ -1,6 +1,8 @@
-export interface IResult {
-    error: string | null
-    result: string | null,
+export interface IServiceResponse {
+    success: boolean,
+    message: string
+    data?: any | undefined,
+
 }
 
 export interface IUser {
@@ -19,4 +21,10 @@ export interface IUserJWT {
     name: string,
     id: string,
     phoneNumber: string
+}
+
+export interface IMessage {
+    message: string,
+    createdAt: string,
+    user: Omit<IUser, 'password' | 'phoneNumber'>
 }
