@@ -4,7 +4,8 @@
   "description": "",
   "main": "./build/server.js",
   "scripts": {
-    "start": "rm -rf ./build && tsc --project tsconfig.json && node build/src/server.js",
+    "prestart": "rm -rf ./build",
+    "start": "tsc --project tsconfig.json && node build/src/server.js",
     "dev": "tsnd src/server.ts",
     "build": "tsc --project tsconfig.json",
     "db:reset": "npx sequelize-cli db:drop && npx sequelize-cli db:create && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
@@ -27,6 +28,7 @@
     "ejs": "^3.1.8",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.0.3",
     "mysql2": "^3.1.2",
     "sequelize": "^6.28.2",
     "socket.io": "^4.6.0",

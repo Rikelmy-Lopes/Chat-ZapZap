@@ -1,5 +1,5 @@
-import UserRoom from '../database/model/UserRoom';
-import User from '../database/model/User';
+import UserRoom from '../database/SQL/model/UserRoom';
+import User from '../database/SQL/model/User';
 import UserModel from './UserModel';
 import { Op } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';

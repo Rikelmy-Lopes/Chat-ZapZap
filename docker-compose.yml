@@ -30,6 +30,7 @@ services:
       - ./backend:/backend-docker
     depends_on:
       - db-mysql
+      - db-mongodb
   db-mysql:
     container_name: db-mysql
     image: mysql:latest
@@ -38,3 +39,9 @@ services:
       - MYSQL_ROOT_PASSWORD=899899
     ports:
       - 33066:3306
+  db-mongodb:
+    container_name: db-mongodb
+    image: mongo:latest
+    restart: 'always'
+    ports:
+      - 27018:27017

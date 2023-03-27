@@ -1,5 +1,5 @@
-import UserMessage from '../database/model/UserMessage';
-import User from '../database/model/User';
+import UserMessage from '../database/SQL/model/UserMessage';
+import User from '../database/SQL/model/User';
 import UserModel from './UserModel';
 import { IMessage } from '../Interface/UserInterface';
 

@@ -1,4 +1,4 @@
-import User from '../database/model/User';
+import User from '../database/SQL/model/User';
 import { IUser } from '../Interface/UserInterface';
 import { encryptPassword } from '../Utils/BCrypt';
 
