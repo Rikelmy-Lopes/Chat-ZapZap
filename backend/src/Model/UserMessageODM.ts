@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { IUsersMessage, IMessage } from '../Interface/MessageODM';
+import { IUsersMessage } from '../Interface/MessageODM';
 import AbstractODM from '../database/NOSQL/AbstractODM';
 
 
@@ -12,8 +12,9 @@ class UserMessageODM extends AbstractODM<IUsersMessage> {
     super(schema, 'Message');
   }
 
-  public async getMessage() {
-    const test = await this.model.findOne();
+  public async add(message: IUsersMessage) {
+    await this.model.create(message);
+    return;
   }
 }
 

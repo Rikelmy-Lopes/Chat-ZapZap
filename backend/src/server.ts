@@ -6,6 +6,7 @@ import { Server, Socket } from 'socket.io';
 const serverSocketIo = http.createServer();
 import socketChat from './Router/SocketChat';
 import socketMessage from './Router/SocketMessage';
+import connectToDatabase from './database/NOSQL/config/connection';
 const io = new Server(serverSocketIo, {
   cors: {
     origin: '*'
@@ -33,5 +34,14 @@ io.on('connection', (socket: Socket) => {
   });
 });
 
-serverSocketIo.listen(4000, () => console.log(`Running server SocketIo on: http://${ip}:${4000}`));
-app.listen(Number(PORT), () => console.log(`Running server Express on: http://${ip}:${PORT}`));
+connectToDatabase().then(()=> {
+  serverSocketIo.listen(4000, () => console.log(`Running server SocketIo on: http://${ip}:${4000}`));
+  app.listen(Number(PORT), () => console.log(`Running server Express on: http://${ip}:${PORT}`));
+
+}).catch((error) => {
+  console.log('Connection with database generated an error:\r\n');
+  console.error(error);
+  console.log('\r\nServer initialization cancelled');
+  process.exit(0);
+});
+
