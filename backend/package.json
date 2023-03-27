@@ -8,7 +8,10 @@
     "start": "tsc --project tsconfig.json && node build/src/server.js",
     "dev": "tsnd src/server.ts",
     "build": "tsc --project tsconfig.json",
-    "db:reset": "npx sequelize-cli db:drop && npx sequelize-cli db:create && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
+    "db:create": "npx sequelize-cli db:drop && npx sequelize-cli db:create",
+    "db:migrate": "npx sequelize-cli db:migrate",
+    "db:seed": "npx sequelize-cli db:seed:all",
+    "db:reset": "npm run db:create && npm run db:migrate && npm run db:seed",
     "test": "npm test"
   },
   "repository": {
