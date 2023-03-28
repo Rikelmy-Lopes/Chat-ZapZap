@@ -3,7 +3,7 @@ import cors from 'cors';
 import path from 'path';
 import ejs from 'ejs';
 import userRouter from './Router/userRouter';
-import messageRouter from './Router/MessageRouter';
+import messageRouter from './Router/messageRouter';
 
 const app = express();
 

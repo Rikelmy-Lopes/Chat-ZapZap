@@ -6,5 +6,10 @@ export interface IMessage {
 
 export interface IUsersMessage {
     roomId: string,
+    message: IMessage
+}
+
+export interface IUsersMessageODM {
+    roomId: string,
     message: IMessage[]
 }

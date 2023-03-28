@@ -4,8 +4,8 @@ import 'dotenv/config';
 import http from 'http';
 import { Server, Socket } from 'socket.io';
 const serverSocketIo = http.createServer();
-import socketChat from './Router/SocketChat';
-import socketMessage from './Router/SocketMessage';
+import socketChat from './Socket/SocketChat';
+import socketMessage from './Socket/SocketMessage';
 import connectToDatabase from './database/NOSQL/config/connection';
 const io = new Server(serverSocketIo, {
   cors: {

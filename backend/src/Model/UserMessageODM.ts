@@ -1,11 +1,11 @@
 import { Schema } from 'mongoose';
-import { IMessage, IUsersMessage } from '../Interface/MessageODM';
+import { IMessage, IUsersMessage, IUsersMessageODM } from '../Interface/MessageODM';
 import AbstractODM from '../database/NOSQL/AbstractODM';
 
 
-class UserMessageODM extends AbstractODM<IUsersMessage> {
+class UserMessageODM extends AbstractODM<IUsersMessageODM> {
   constructor() {
-    const schema = new Schema<IUsersMessage>({
+    const schema = new Schema<IUsersMessageODM>({
       roomId: { type: String, required: true }, 
       message: { type: Schema.Types.Mixed, required: true},
     });
