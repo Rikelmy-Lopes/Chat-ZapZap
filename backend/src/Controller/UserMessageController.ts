@@ -20,12 +20,6 @@ class UserMessageController {
     const { success, data } = await this.service.getMessage(hashRoomId);
     if (success) return this.service.getMessage(data);
   }
-
-  public async add() {
-    const message = this.request.body;
-    await this.ODM.add(message);
-    this.response.status(200).json({ message: 'Success' });
-  }
 }
 
 export default UserMessageController;
