@@ -42,6 +42,15 @@ class UserMiddleware {
 
     this.next();
   }
+
+  public validateGetUser() {
+    const { phoneNumber } = this.request.params;
+    if (!phoneNumber) {
+      return this.response.status(400).json({ message: this.ERROR_MESSAGE_FIELDS});
+    }
+
+    this.next();
+  }
 }
 
 export default UserMiddleware;

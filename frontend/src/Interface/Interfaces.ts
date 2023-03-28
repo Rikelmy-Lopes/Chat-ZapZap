@@ -9,10 +9,6 @@ export interface IContact {
     phoneNumber: string
 }
 
-export interface IApiResponseMessage {
-    message: string
-}
-
 export interface IApiResponseToken {
     token: string
 }

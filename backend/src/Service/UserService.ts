@@ -43,7 +43,10 @@ class UserService {
   public async getUser(phoneNumber: string): Promise<IServiceResponse> {
     const result = await this.model.getUserByPhone(phoneNumber);
 
-    if (result) return { success: true, message: 'User Found' };
+    if (result) return { success: true, message: 'User Found', data: {
+      name: result.name,
+      phoneNumber: result.phoneNumber
+    } };
     return {  success: false,  message: 'User not Found' };
   }
 }

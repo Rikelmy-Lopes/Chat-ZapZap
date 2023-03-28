@@ -11,7 +11,9 @@ class UserModel {
   }
 
   public async getUserByPhone(phoneNumber: string): Promise<User | null> {
-    const result: User | null = await this.model.findOne({ where: { phoneNumber }});
+    const result: User | null = await this.model.findOne({
+      where: { phoneNumber },
+    });
 
     return result;
   }

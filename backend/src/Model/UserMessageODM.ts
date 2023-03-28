@@ -17,7 +17,7 @@ class UserMessageODM extends AbstractODM<IUsersMessageODM> {
       roomId: UserMessage.roomId,
       $push: { message: UserMessage.message }
     }, {
-      upsert: true
+      upsert: true,
     });
 
     return;

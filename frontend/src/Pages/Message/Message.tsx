@@ -6,7 +6,8 @@ import { IContact, IMessageReceive, IUser } from '../../Interface/Interfaces';
 function Message({ selectedPhone }: any) {
   const socketRef = useRef<Socket>();
   const [ message, setMessage ] = useState<string>('');
-  const [ hashRoomId, setHashRoomId ] = useState<string>(''); 
+  const [ hashRoomId, setHashRoomId ] = useState<string>('');
+  const [ messages, setMessages ] = useState([]);
 
   const autoScroll = (): void => {
     const chatMessages: HTMLElement | null = document.getElementById('messages');

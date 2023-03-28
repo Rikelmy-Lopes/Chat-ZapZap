@@ -18,6 +18,7 @@ router.post('/register', [
 ]);
 
 router.get('/user/:phoneNumber', [
+  (req: Request, res: Response, next: NextFunction) => new UserMiddleware(req, res, next).validateGetUser(),
   (req: Request, res: Response) => new UserController(req, res).getUser()
 ]);
 

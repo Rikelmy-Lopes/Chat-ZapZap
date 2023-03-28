@@ -16,7 +16,6 @@ class UserController {
   public async validateLogin() {
     const { phoneNumber, password } = this.request.body;
     const { success, message, data }  = await this.service.validateUser(phoneNumber, password);
-
     if (success) return this.response.status(200).json(data);
     if (message === 'User not Found') {
       return this.response.status(404).json({ message });
@@ -42,8 +41,8 @@ class UserController {
 
   public async getUser() {
     const { phoneNumber } = this.request.params;
-    const { success, message } = await this.service.getUser(phoneNumber);
-    if (success) return this.response.status(200).json({ message });
+    const { success, message, data } = await this.service.getUser(phoneNumber);
+    if (success) return this.response.status(200).json(data);
     return this.response.status(404).json({ message });
   }
 

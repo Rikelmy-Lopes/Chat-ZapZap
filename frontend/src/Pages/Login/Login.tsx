@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
 import './Login.css';
-import { IApiResponseMessage, IUser } from '../../Interface/Interfaces';
+import { IUser } from '../../Interface/Interfaces';
 
 function Login() {
   const history = useNavigate();
   const { pathname } = useLocation();
   const [ phoneNumber, setPhoneNumber ] = useState<string>('');
   const [ password, setPassword ] = useState<string>('');
+  const [errorExist, setErrorExist] = useState<boolean>(false);
+  const [errorStatus, setErrorStatus] = useState<number | undefined>();
 
   const handleKeyDown = (event: React.KeyboardEvent): void => {
     if (event.key === 'Enter' && isAllFieldsFilledOut()) {
@@ -25,27 +27,45 @@ function Login() {
   };
 
   const removeErrorMessage = (): void => {
-    const tagError:HTMLElement | null = document.getElementById('error-message');
-    if(!tagError) return;
     setTimeout(() => {
-      tagError.style.display = 'none';
-      tagError.innerText = '';
+      setErrorExist(false);
+      setErrorStatus(undefined);
     }, 2500);
   };
 
-  const displayErrorMessage = (error: AxiosError<IApiResponseMessage>): void => {
-    const message = error?.response?.data?.message;
-    const tagError: HTMLElement | null = document.getElementById('error-message');
-    if (!tagError) return;
-    if (message === 'User not Found') {
-      tagError.style.display = 'inline-block';
-      tagError.innerText = 'Usuário não existe!';
+  const displayErrorMessage = (): ReactElement | undefined => {
+    if (!errorExist) return;
+    if (errorStatus === 404) {
       removeErrorMessage();
-      return;
+      return (
+        <p 
+          className='error-message'
+          style={ { display: 'inline-block' }}
+        >
+          Usuário não existe!
+        </p>
+      );
     }
-    tagError.style.display = 'inline-block';
-    tagError.innerText = 'Senha Incorreta, Tente Novamente!';
+    else if (errorStatus === 401) {
+      removeErrorMessage();
+      return (
+        <p 
+          className='error-message'
+          style={ { display: 'inline-block' }}
+        >
+          Senha Incorreta, Tente Novamente!
+        </p>
+      );
+    }
     removeErrorMessage();
+    return (
+      <p 
+        className='error-message'
+        style={ { display: 'inline-block' }}
+      >
+        Error Desconhecido!
+      </p>
+    );
   };
 
   const validateUser = async (): Promise<void> => {
@@ -58,8 +78,10 @@ function Login() {
       localStorage.setItem('user', JSON.stringify(data));
       history('/chats');
       return;
-    } catch (error) {
-      displayErrorMessage(error as AxiosError<IApiResponseMessage>);
+    } catch (axiosError: unknown) {
+      const error = axiosError as AxiosError;
+      setErrorExist(true);
+      setErrorStatus(error.response?.status);
       console.log(error);
     }
   };
@@ -102,7 +124,7 @@ function Login() {
         >
         Login
         </button>
-        <p id='error-message'></p>
+        { displayErrorMessage() }
         <div id='register-link'>
           <p>Não tem uma conta?</p>
           <Link to='/register'>

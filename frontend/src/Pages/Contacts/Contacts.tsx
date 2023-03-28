@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { IContact, IUser } from '../../Interface/Interfaces';
+import { IContact } from '../../Interface/Interfaces';
 import axios from 'axios';
 import './Contacts.css';
 import Header from '../../Components/Header/Header';
@@ -8,17 +8,17 @@ import { validateToken  } from '../../Utils/Auth';
 
 function Contacts() {
   const history = useNavigate();
-  const [name, setName] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [contacts, setContacts] = useState<IContact[]>([]);
 
-  const isContactExist = async (): Promise<boolean> => {
+  const getContactInfo = async (): Promise<void> => {
+    if (isContactAlreadySaved()) return;
     const host = process.env.REACT_APP_BACKEND_HOST;
     try {
-      await axios.get(`${host}/user/${phoneNumber}`);
-      return true;
+      const { data } = await axios.get(`${host}/user/${phoneNumber}`);
+      addContact(data.name);
     } catch (error) {
-      return false;
+      console.log(error);
     }
   };
 
@@ -27,13 +27,11 @@ function Contacts() {
     return contacts.some((contact) => contact.phoneNumber === phoneNumber);
   };
 
-  const addContact = async (): Promise<void> => {
-    if (isContactAlreadySaved()) return;
-    if (!(await isContactExist())) return;
+  const addContact = async (userName: string): Promise<void> => {
     if (localStorage.getItem('contacts')) {
       const contacts: IContact[] = JSON.parse(String(localStorage.getItem('contacts')));
       contacts.push({
-        name,
+        name: userName,
         phoneNumber,
       });
       localStorage.setItem('contacts', JSON.stringify(contacts));
@@ -89,13 +87,6 @@ function Contacts() {
           }
         </div>
         <div id='add-contact-container'>
-          <label htmlFor="contact-name">Nome do Contato:</label>
-          <input
-            placeholder='Nome'
-            type="text" 
-            id='contact-name'
-            onChange={ ({ target }) => setName(target.value) }
-          />
           <label htmlFor="contact-phoneNumber">Número do Contato:</label>
           <input
             placeholder='Exemplo: +5538123456789'
@@ -104,7 +95,8 @@ function Contacts() {
             onChange={ ({ target }) => setPhoneNumber(target.value) }
           />
           <button
-            onClick={ addContact }
+            disabled={ !(phoneNumber.length >= 10) }
+            onClick={ getContactInfo }
           >
           Adicionar Contato
           </button>

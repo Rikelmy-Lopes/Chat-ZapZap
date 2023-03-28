@@ -1,7 +1,6 @@
-import axios from 'axios';
-import React, { useState } from 'react';
+import axios, { AxiosError } from 'axios';
+import React, { ReactElement, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { IApiResponseToken } from '../../Interface/Interfaces';
 import './Register.css';
 
 function Register() {
@@ -9,6 +8,8 @@ function Register() {
   const [ phoneNumber, setPhoneNumber ] = useState<string>('');
   const [ name, setName ] = useState<string>('');
   const [ password, setPassword ] = useState<string>('');
+  const [errorExist, setErrorExist] = useState<boolean>(false);
+  const [errorStatus, setErrorStatus] = useState<number | undefined>(undefined);
 
   const handleKeyDown = (event: React.KeyboardEvent): void => {
     if (event.key === 'Enter' && isAllFieldsFilledOut()) {
@@ -18,20 +19,34 @@ function Register() {
   };
 
   const removeErrorMessage = (): void => {
-    const tagError: HTMLElement | null = document.getElementById('error-message');
-    if (!tagError) return;
     setTimeout(() => {
-      tagError.style.display = 'none';
-      tagError.innerText = '';
+      setErrorExist(false);
+      setErrorStatus(undefined);
     }, 2500);
   };
 
-  const displayErrorMessage = (): void => {
-    const tagError: HTMLElement | null = document.getElementById('error-message');
-    if (!tagError) return;
-    tagError.style.display = 'inline-block';
-    tagError.innerText = 'Usuário já Existe!';
+  const displayErrorMessage = (): ReactElement | undefined => {
+    if (!errorExist) return;
+    if (errorStatus === 409) {
+      removeErrorMessage();
+      return (
+        <p 
+          className='error-message'
+          style={ { display: 'inline-block' }}
+        >
+          Usuário já Existe!
+        </p>
+      );
+    }
     removeErrorMessage();
+    return (
+      <p 
+        className='error-message'
+        style={ { display: 'inline-block' }}
+      >
+        Error Desconhecido!
+      </p>
+    );
   };
 
   const registerUser = async (): Promise<void> => {
@@ -43,13 +58,13 @@ function Register() {
         password,
       });
       localStorage.setItem('user', JSON.stringify(data));
-      history('/contacts');
-      return;
+      history('/chats');
     }
-    catch (error) {
-      displayErrorMessage();
+    catch (axiosError: unknown) {
+      const error = axiosError as AxiosError;
+      setErrorExist(true);
+      setErrorStatus(error.response?.status);
       console.log(error);
-      return;
     }
   };
 
@@ -100,7 +115,9 @@ function Register() {
         >
         Registrar
         </button>
-        <p id='error-message'></p>
+        {
+          displayErrorMessage()
+        }
         <div id='login-link'>
           Já tem uma conta?
           <Link to='/login'>

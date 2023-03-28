@@ -52,7 +52,7 @@ html, body {
     font-weight: 700;
 }
 
-#error-message {
+.error-message {
     display: none;
     font-weight: 600;
     width: fit-content;
