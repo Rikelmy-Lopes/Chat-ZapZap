@@ -17,12 +17,6 @@ export interface IUserResponse {
     token: string,
 }
 
-export interface IUserJWT {
-    name: string,
-    id: string,
-    phoneNumber: string
-}
-
 export interface IMessage {
     message: string,
     createdAt: string,

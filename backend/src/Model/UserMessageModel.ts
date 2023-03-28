@@ -17,7 +17,7 @@ class UserMessageModel {
     this.model.create({ userId: id, roomId, message });
   }
 
-  public async getMessage(roomId: string): Promise<IMessage[]> {
+  public async getMessages(roomId: string): Promise<IMessage[]> {
     const messages = await this.model.findAll({
       where: { roomId },
       order: [
