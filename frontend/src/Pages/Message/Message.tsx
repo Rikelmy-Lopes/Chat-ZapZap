@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import './Message.css';
-import { IContact, IMessageReceive, IUser } from '../../Interface/Interfaces';
+import { IContact, IMessage, IUser } from '../../Interface/Interfaces';
 
 function Message({ selectedPhone }: any) {
   const socketRef = useRef<Socket>();
-  const [ message, setMessage ] = useState<string>('');
+  const [ messageInput, setMessageInput ] = useState<string>('');
   const [ hashRoomId, setHashRoomId ] = useState<string>('');
-  const [ messages, setMessages ] = useState([]);
+  const [ messages, setMessages ] = useState<IMessage[]>([]);
 
   const autoScroll = (): void => {
     const chatMessages: HTMLElement | null = document.getElementById('messages');
@@ -22,7 +22,7 @@ function Message({ selectedPhone }: any) {
   };
 
   const handleKeyDown = (event: React.KeyboardEvent): void => {
-    if (event.key === 'Enter' && message.length > 0) {
+    if (event.key === 'Enter' && messageInput.length > 0) {
       sendMessage();
       return;
     }
@@ -35,29 +35,28 @@ function Message({ selectedPhone }: any) {
       socketRef.current.on('roomId-send', (hash: string) => {
         setHashRoomId(hash);
       });
-      socketRef.current.on('message-receive', ({ message, userName, hour }: IMessageReceive) => {
-        addMessage(message, userName, hour);
+      socketRef.current.on('message-receive', (message: IMessage) => {
+        addMessage(message);
       });
     }
   };
 
-  const addMessage = (message: string, userName: string, hour: string): void => {
-    const divMessages: HTMLElement | null  = document.getElementById('messages');
-    if (!divMessages) return;
-    divMessages.innerHTML += `
-    <div class="message">
-    <div class="name">${ userName }:</div>
-    <div class="content">
-        <div class="text">${ message }</div>
-        <div class="time">${ hour }</div>
-    </div>
-  </div>`;
-    autoScroll();
+  const addMessage = ({ userName, message, hour }: IMessage): void => {
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      {
+        userName,
+        message,
+        hour,
+      }
+    ]);
+    setTimeout(() => {
+      autoScroll();
+    }, 1);
   };
 
   const deleteMessages = () => {
-    const messagesDiv = document.getElementById('messages') as HTMLElement;
-    messagesDiv.innerHTML = '';
+    setMessages([]);
   };
 
   const openChat = (): void => {
@@ -68,8 +67,8 @@ function Message({ selectedPhone }: any) {
 
   const sendMessage = (): void => {
     const { name, phoneNumber }: IUser = JSON.parse(String(localStorage.getItem('user')));
-    socketRef.current?.emit('message-send', { message, hashRoomId, userName: name, phoneNumber });
-    setMessage('');
+    socketRef.current?.emit('message-send', { message: messageInput, hashRoomId, userName: name, phoneNumber });
+    setMessageInput('');
   };
 
   const manageSocketConnection = () => {
@@ -97,17 +96,32 @@ function Message({ selectedPhone }: any) {
     <div id='container-m'>
       <div id='message-container'>
         <h2>Conversando com: { getChatWithName() }</h2>
-        <div id='messages'> </div>
+        <div 
+          id='messages'
+        > {
+            messages.map(({userName, message, hour}, index) => {
+              return (
+                <div key={index} className="message">
+                  <div className="name">{ userName }: </div>
+                  <div className="content">
+                    <div className="text"> { message }</div>
+                    <div className="time">{ hour }</div>
+                  </div>
+                </div>
+              );
+            })
+          }
+        </div>
         <div id='container-send-message'>
           <input
             placeholder='Digite sua mensagem'
             type="text" 
-            value={ message }
-            onChange={({ target }) => setMessage(target.value)}
+            value={ messageInput }
+            onChange={({ target }) => setMessageInput(target.value)}
             onKeyDown={ handleKeyDown }
           />
           <button
-            disabled={ !message ? true : false}
+            disabled={ !messageInput ? true : false}
             onClick={ sendMessage }
           >
           Enviar

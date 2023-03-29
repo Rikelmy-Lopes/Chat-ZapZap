@@ -13,7 +13,7 @@ export interface IApiResponseToken {
     token: string
 }
 
-export interface IMessageReceive {
+export interface IMessage {
     message: string
     userName: string
     hour: string

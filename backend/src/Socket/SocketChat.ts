@@ -5,7 +5,6 @@ import { encryptRoomId } from '../Utils/CryptoJs';
 export default (socket: Socket): void => {
   const userRoomModel = new UserRoomModel();
   socket.on('chat', async ({ phoneNumber1, phoneNumber2 }) => {
-    console.log(phoneNumber1, phoneNumber2);
     let roomId: string | undefined = await userRoomModel.getRoom(phoneNumber1, phoneNumber2);
     if(roomId) {
       socket.join(roomId);
