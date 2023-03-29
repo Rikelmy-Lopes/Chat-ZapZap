@@ -26,8 +26,8 @@ class UserMiddleware {
   }
 
   public validateToken() {
-    const { token } = this.request.body;
-    if (!token) {
+    const { authorization } = this.request.headers;
+    if (!authorization) {
       return this.response.status(400).json({ message: this.ERROR_MESSAGE_TOKEN });
     }
     

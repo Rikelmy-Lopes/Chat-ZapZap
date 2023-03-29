@@ -26,8 +26,8 @@ class UserController {
   }
 
   public validateToken() {
-    const { token } = this.request.body;
-    const { success, message } = this.service.validateToken(token);
+    const { authorization } = this.request.headers;
+    const { success, message } = this.service.validateToken(String(authorization));
     if (success) return this.response.status(200).json({ message });
     return this.response.status(403).json({ message });
   }

@@ -15,10 +15,10 @@ class UserMessageController {
     this.response = response;
   }
 
-  public async getMessages() {
-    const { hashRoomId } = this.request.params;
-    const { success, data } = await this.service.getMessage(hashRoomId);
-    if (success) return this.service.getMessage(data);
+  public async getMessage() {
+    const { hashroomid } = this.request.headers;
+    const { success, data } = await this.service.getMessage(String(hashroomid));
+    if (success) return this.response.status(200).json(data);
   }
 }
 

@@ -8,7 +8,7 @@ router.post('/login', [
   (req: Request, res: Response, next: NextFunction) => new UserMiddleware(req, res, next).validateLogin(),
   (req: Request, res: Response) => new UserController(req, res).validateLogin()
 ]);
-router.post('/login/token', [
+router.get('/login/token', [
   (req: Request, res: Response, next: NextFunction) => new UserMiddleware(req, res, next).validateToken(),
   (req: Request, res: Response) => new UserController(req, res).validateToken()
 ]);

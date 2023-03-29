@@ -26,8 +26,8 @@ class UserService {
   }
 
   public validateToken(token: string): IServiceResponse {
-    const response = jwt.validateToken(token);
-    if (response) return {success: true, message: 'Token Valid'};
+    const isValid = jwt.validateToken(token.replace('Bearer ', ''));
+    if (isValid) return {success: true, message: 'Token Valid'};
     return { success: false, message: 'Invalid Token' };
   }
 

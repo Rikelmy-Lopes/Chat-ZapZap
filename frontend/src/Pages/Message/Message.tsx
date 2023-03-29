@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import './Message.css';
 import { IContact, IMessage, IUser } from '../../Interface/Interfaces';
+import axios from 'axios';
 
 function Message({ selectedPhone }: any) {
   const socketRef = useRef<Socket>();
@@ -12,7 +13,9 @@ function Message({ selectedPhone }: any) {
   const autoScroll = (): void => {
     const chatMessages: HTMLElement | null = document.getElementById('messages');
     if (!chatMessages) return;
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    setTimeout(() => {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }, 1);
   };
 
   const getChatWithName = (): string | undefined => {
@@ -50,9 +53,7 @@ function Message({ selectedPhone }: any) {
         hour,
       }
     ]);
-    setTimeout(() => {
-      autoScroll();
-    }, 1);
+    autoScroll();
   };
 
   const deleteMessages = () => {
@@ -79,6 +80,26 @@ function Message({ selectedPhone }: any) {
     deleteMessages();
     createSocketConnection();
   };
+
+  const getMessages = async () => {
+    const host = process.env.REACT_APP_BACKEND_HOST;
+    if (!hashRoomId) return;
+    try {
+      const { data } = await axios.get(`${host}/message`, {
+        headers: {
+          hashRoomId
+        }
+      });
+      setMessages(data);
+      autoScroll();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getMessages();
+  }, [hashRoomId]);
 
   useEffect(() => {
     manageSocketConnection();

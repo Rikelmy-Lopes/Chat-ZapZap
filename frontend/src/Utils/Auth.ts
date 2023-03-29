@@ -6,8 +6,10 @@ const validateToken = async (history: NavigateFunction): Promise<void> => {
   const host = process.env.REACT_APP_BACKEND_HOST;
   const { token }: IUser = JSON.parse(String(localStorage.getItem('user'))) || {};
   try {
-    await axios.post(`${host}/login/token`, {
-      token
+    await axios.get(`${host}/login/token`, {
+      headers: {
+        Authorization: 'Bearer ' + token
+      }
     });
     return;
   }
