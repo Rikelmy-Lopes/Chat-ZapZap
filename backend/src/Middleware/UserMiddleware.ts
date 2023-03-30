@@ -6,14 +6,12 @@ class UserMiddleware {
   private request: Request;
   private next: NextFunction;
   private ERROR_MESSAGE_FIELDS: string;
-  private ERROR_MESSAGE_TOKEN: string;
   
   constructor(request: Request, response: Response, next: NextFunction) {
     this.request = request;
     this.response = response;
     this.next = next;
     this.ERROR_MESSAGE_FIELDS = 'All fields must be filled out';
-    this.ERROR_MESSAGE_TOKEN = 'The token must be filled out';
   }
 
   public validateLogin() {
@@ -22,15 +20,6 @@ class UserMiddleware {
       return this.response.status(400).json({ message: this.ERROR_MESSAGE_FIELDS});
     }
 
-    this.next();
-  }
-
-  public validateToken() {
-    const { authorization } = this.request.headers;
-    if (!authorization) {
-      return this.response.status(400).json({ message: this.ERROR_MESSAGE_TOKEN });
-    }
-    
     this.next();
   }
 

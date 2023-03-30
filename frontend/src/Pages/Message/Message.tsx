@@ -82,12 +82,14 @@ function Message({ selectedPhone }: any) {
   };
 
   const getMessages = async () => {
+    const { token }: IUser = JSON.parse(String(localStorage.getItem('user')));
     const host = process.env.REACT_APP_BACKEND_HOST;
     if (!hashRoomId) return;
     try {
       const { data } = await axios.get(`${host}/message`, {
         headers: {
-          hashRoomId
+          hashRoomId,
+          Authorization: token
         }
       });
       setMessages(data);

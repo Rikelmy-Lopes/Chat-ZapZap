@@ -5,6 +5,7 @@ import './Contacts.css';
 import Header from '../../Components/Header/Header';
 import { useNavigate } from 'react-router-dom';
 import { validateToken  } from '../../Utils/Auth';
+import { IUser } from '../../Interface/Interfaces';
 
 function Contacts() {
   const history = useNavigate();
@@ -13,9 +14,14 @@ function Contacts() {
 
   const getContactInfo = async (): Promise<void> => {
     if (isContactAlreadySaved()) return;
+    const { token }: IUser = JSON.parse(String(localStorage.getItem('user')));
     const host = process.env.REACT_APP_BACKEND_HOST;
     try {
-      const { data } = await axios.get(`${host}/user/${phoneNumber}`);
+      const { data } = await axios.get(`${host}/user/${phoneNumber}`, {
+        headers: {
+          Authorization: token
+        }
+      });
       addContact(data.name);
     } catch (error) {
       console.log(error);
