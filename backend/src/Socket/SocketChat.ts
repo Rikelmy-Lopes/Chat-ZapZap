@@ -13,7 +13,6 @@ export default (socket: Socket): void => {
       if (!roomId) return;
       socket.join(roomId);
     }
-    roomId = await userRoomModel.getRoom(phoneNumber1, phoneNumber2);
     if (!roomId) return;
     const encryptedRoomId: string = encryptRoomId(roomId);
     socket.emit('roomId-send', encryptedRoomId);
