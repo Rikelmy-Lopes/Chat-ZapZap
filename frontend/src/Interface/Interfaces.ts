@@ -16,5 +16,5 @@ export interface IApiResponseToken {
 export interface IMessage {
     message: string
     userName: string
-    hour: string
+    createdAt: string
 }

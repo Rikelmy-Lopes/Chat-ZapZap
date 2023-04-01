@@ -44,13 +44,13 @@ function Message({ selectedPhone }: any) {
     }
   };
 
-  const addMessage = ({ userName, message, hour }: IMessage): void => {
+  const addMessage = ({ userName, message, createdAt }: IMessage): void => {
     setMessages((prevMessages) => [
       ...prevMessages,
       {
         userName,
         message,
-        hour,
+        createdAt
       }
     ]);
     autoScroll();
@@ -68,7 +68,14 @@ function Message({ selectedPhone }: any) {
 
   const sendMessage = (): void => {
     const { name, phoneNumber }: IUser = JSON.parse(String(localStorage.getItem('user')));
-    socketRef.current?.emit('message-send', { message: messageInput, hashRoomId, userName: name, phoneNumber });
+    const date = new Date();
+    socketRef.current?.emit('message-send', { 
+      message: messageInput, 
+      hashRoomId,  
+      userName: name,
+      phoneNumber,
+      createdAt: `${date.getHours()}:${date.getMinutes()}`
+    });
     setMessageInput('');
   };
 
@@ -122,13 +129,13 @@ function Message({ selectedPhone }: any) {
         <div 
           id='messages'
         > {
-            messages.map(({userName, message, hour}, index) => {
+            messages.map(({ userName, message, createdAt }, index) => {
               return (
                 <div key={index} className="message">
                   <div className="name">{ userName }: </div>
                   <div className="content">
                     <div className="text"> { message }</div>
-                    <div className="time">{ hour }</div>
+                    <div className="time">{ createdAt }</div>
                   </div>
                 </div>
               );
