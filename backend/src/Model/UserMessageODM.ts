@@ -6,7 +6,7 @@ import AbstractODM from '../database/NOSQL/AbstractODM';
 class UserMessageODM extends AbstractODM<IUsersMessageODM> {
   constructor() {
     const schema = new Schema<IUsersMessageODM>({
-      roomId: { type: String, required: true }, 
+      roomId: { type: String, required: true },
       message: { type: Schema.Types.Mixed, required: true},
     });
     super(schema, 'Message');

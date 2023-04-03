@@ -1,13 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
+import React, { useEffect, useState } from 'react';
 import './Message.css';
 import { IContact, IMessage, IUser } from '../../Interface/Interfaces';
 import axios from 'axios';
+import { Socket } from 'socket.io-client';
+import MessageItem from '../MessageItem/MessageItem';
 
-function Message({ selectedPhone }: any) {
-  const socketRef = useRef<Socket>();
+interface Props {
+  socket: Socket | undefined;
+  selectedPhone: string;
+  hashRoomId: string;
+}
+
+function Message({ socket, selectedPhone, hashRoomId }: Props): JSX.Element {
   const [ messageInput, setMessageInput ] = useState<string>('');
-  const [ hashRoomId, setHashRoomId ] = useState<string>('');
   const [ messages, setMessages ] = useState<IMessage[]>([]);
 
   const autoScroll = (): void => {
@@ -32,16 +37,10 @@ function Message({ selectedPhone }: any) {
   };
 
   const createSocketConnection = (): void => {
-    if (!socketRef.current && localStorage.getItem('user')) {
-      socketRef.current = io('http://192.168.0.189:4000');
-      openChat();
-      socketRef.current.on('roomId-send', (hash: string) => {
-        setHashRoomId(hash);
-      });
-      socketRef.current.on('message-receive', (message: IMessage) => {
-        addMessage(message);
-      });
-    }
+    socket?.removeAllListeners('new-message');
+    socket?.on('new-message', (message: IMessage) => {
+      addMessage(message);
+    });
   };
 
   const addMessage = ({ userName, message, createdAt }: IMessage): void => {
@@ -60,30 +59,22 @@ function Message({ selectedPhone }: any) {
     setMessages([]);
   };
 
-  const openChat = (): void => {
-    if (!localStorage.getItem('user')) return;
-    const { phoneNumber }: IUser = JSON.parse(String(localStorage.getItem('user')));
-    socketRef.current?.emit('chat', { phoneNumber1: selectedPhone, phoneNumber2: phoneNumber});
-  };
-
   const sendMessage = (): void => {
     const { name, phoneNumber }: IUser = JSON.parse(String(localStorage.getItem('user')));
     const date = new Date();
-    socketRef.current?.emit('message-send', { 
+    const timestamp = date.getTime();
+    socket?.emit('new-message', { 
       message: messageInput, 
-      hashRoomId,  
       userName: name,
       phoneNumber,
-      createdAt: `${date.getHours()}:${date.getMinutes()}`
+      hashRoomId,
+      createdAt: String(timestamp)
     });
+    // addMessage({ userName: name, message: messageInput, createdAt: hour });
     setMessageInput('');
   };
 
   const manageSocketConnection = () => {
-    if (socketRef.current) {
-      socketRef.current.close();
-      socketRef.current = undefined;
-    }
     deleteMessages();
     createSocketConnection();
   };
@@ -113,15 +104,6 @@ function Message({ selectedPhone }: any) {
   useEffect(() => {
     manageSocketConnection();
   }, [selectedPhone]);
-
-  useEffect(() => {
-    return () => {
-      if (socketRef.current) {
-        socketRef.current.close();
-      }
-    };
-  }, []);
-
   return(
     <div id='container-m'>
       <div id='message-container'>
@@ -129,15 +111,14 @@ function Message({ selectedPhone }: any) {
         <div 
           id='messages'
         > {
-            messages.map(({ userName, message, createdAt }, index) => {
+            messages.map(({ userName, message, createdAt }) => {
               return (
-                <div key={index} className="message">
-                  <div className="name">{ userName }: </div>
-                  <div className="content">
-                    <div className="text"> { message }</div>
-                    <div className="time">{ createdAt }</div>
-                  </div>
-                </div>
+                <MessageItem
+                  key={createdAt}
+                  userName={ userName }
+                  message={ message }
+                  createdAt={ createdAt }
+                />
               );
             })
           }

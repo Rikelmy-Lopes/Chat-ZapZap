@@ -23,14 +23,14 @@ if (networkInterfaces.wlp1s0) {
 }
 
 io.on('connection', (socket: Socket) => {
-  console.log('Socket conectado', socket.id);
-
-  socketChat(socket);
+  console.log('\x1b[32m%s\x1b[0m', `Socket conectado: ${socket.id} `);
   
+  socketChat(socket);
+
   socketMessage(socket, io);
 
   socket.on('disconnect', () => {
-    console.log('Usuário desconectado', socket.id);
+    console.log('\x1b[31m%s\x1b[0m', `Usuário desconectado: ${socket.id} `);
   });
 });
 

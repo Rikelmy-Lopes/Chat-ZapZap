@@ -4,7 +4,7 @@ import axios, { AxiosError } from 'axios';
 import './Login.css';
 import { IUser } from '../../Interface/Interfaces';
 
-function Login() {
+function Login(): JSX.Element {
   const history = useNavigate();
   const { pathname } = useLocation();
   const [ phoneNumber, setPhoneNumber ] = useState<string>('');

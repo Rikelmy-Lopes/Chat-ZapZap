@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { validateToken  } from '../../Utils/Auth';
 import { IUser } from '../../Interface/Interfaces';
 
-function Contacts() {
+function Contacts(): JSX.Element {
   const history = useNavigate();
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [contacts, setContacts] = useState<IContact[]>([]);

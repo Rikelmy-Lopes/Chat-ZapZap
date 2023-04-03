@@ -7,13 +7,13 @@ import UserMessageODM from '../Model/UserMessageODM';
 export default (socket: Socket, io: Server) => {
   // const userMessageModel = new UserMessageModel();
   const userMessageModel = new UserMessageODM();
-  socket.on('message-send', async ({ message, hashRoomId, userName, createdAt }) => {
+  socket.on('new-message', async ({ message, hashRoomId, userName, createdAt }) => {
     const decryptedRoomId: string =  decryptRoomId(hashRoomId);
     await userMessageModel.saveMessage({roomId: decryptedRoomId, message: {
       userName,
       message,
-      createdAt
+      createdAt,
     } });
-    io.to(String(decryptedRoomId)).emit('message-receive', { message, userName, createdAt });
+    io.to(String(decryptedRoomId)).emit('new-message', { message, userName, createdAt });
   });
 };
