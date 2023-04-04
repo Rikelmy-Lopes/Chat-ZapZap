@@ -82,8 +82,10 @@ class UserRoomModel {
   // }
 
   public async createRoom(phoneNumber1: string, phoneNumber2: string): Promise<string | undefined> {
-    const user1: User | null = await this.userModel.getUserByPhone(phoneNumber1);
-    const user2: User | null = await this.userModel.getUserByPhone(phoneNumber2);
+    const [ user1, user2 ] = await  Promise.all([
+      this.userModel.getUserByPhone(phoneNumber1),
+      this.userModel.getUserByPhone(phoneNumber2),
+    ]);
     if (user1 && user2) {
       const { roomId }: UserRoom = await this.model.create({ 
         roomId: uuidv4(), 
