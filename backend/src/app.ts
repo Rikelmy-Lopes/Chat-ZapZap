@@ -16,11 +16,4 @@ app.use(userRouter);
 app.use(messageRouter);
 
 
-app.use(express.static(path.join(__dirname, 'public')));
-app.set('views', path.join(__dirname, '..', 'public'));
-app.engine('html', ejs.renderFile);
-app.set('view engine', 'html');
-
-
-
 export default app;
