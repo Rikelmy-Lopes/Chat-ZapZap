@@ -10,7 +10,7 @@ function Login(): JSX.Element {
   const [ phoneNumber, setPhoneNumber ] = useState<string>('');
   const [ password, setPassword ] = useState<string>('');
   const [errorExist, setErrorExist] = useState<boolean>(false);
-  const [errorStatus, setErrorStatus] = useState<number | undefined>();
+  const [errorStatus, setErrorStatus] = useState<number | undefined>(undefined);
 
   const handleKeyDown = (event: React.KeyboardEvent): void => {
     if (event.key === 'Enter' && isAllFieldsFilledOut()) {

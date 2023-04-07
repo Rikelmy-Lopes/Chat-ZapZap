@@ -8,12 +8,12 @@ import MessageItem from '../MessageItem/MessageItem';
 interface Props {
   socket: Socket | undefined;
   selectedPhone: string;
-  hashRoomId: string;
 }
 
-function Message({ socket, selectedPhone, hashRoomId }: Props): JSX.Element {
+function Message({ socket, selectedPhone }: Props): JSX.Element {
   const [ messageInput, setMessageInput ] = useState<string>('');
   const [ messages, setMessages ] = useState<IMessage[]>([]);
+  const [ hashRoomId, setHashRoomId ] = useState<string>('');
 
   const autoScroll = (): void => {
     const chatMessages: HTMLElement | null = document.getElementById('messages');
@@ -23,7 +23,7 @@ function Message({ socket, selectedPhone, hashRoomId }: Props): JSX.Element {
     }, 1);
   };
 
-  const getChatWithName = (): string | undefined => {
+  const getNameOfChattingWith = (): string | undefined => {
     const contacts = JSON.parse(String(localStorage.getItem('contacts'))) as IContact[];
     const contact: IContact | undefined = contacts.find((contact) => contact.phoneNumber === selectedPhone);
     return contact?.name;
@@ -31,12 +31,12 @@ function Message({ socket, selectedPhone, hashRoomId }: Props): JSX.Element {
 
   const handleKeyDown = (event: React.KeyboardEvent): void => {
     if (event.key === 'Enter' && messageInput.length > 0) {
-      sendMessage();
+      sendMessageToUser();
       return;
     }
   };
 
-  const createSocketConnection = (): void => {
+  const addListenerToNewMessage = (): void => {
     socket?.removeAllListeners('new-message');
     socket?.on('new-message', (message: IMessage) => {
       addMessage(message);
@@ -59,7 +59,7 @@ function Message({ socket, selectedPhone, hashRoomId }: Props): JSX.Element {
     setMessages([]);
   };
 
-  const sendMessage = (): void => {
+  const sendMessageToUser = (): void => {
     const { name, phoneNumber }: IUser = JSON.parse(String(localStorage.getItem('user')));
     const date = new Date();
     const timestamp = date.getTime();
@@ -74,12 +74,7 @@ function Message({ socket, selectedPhone, hashRoomId }: Props): JSX.Element {
     setMessageInput('');
   };
 
-  const manageSocketConnection = () => {
-    deleteMessages();
-    createSocketConnection();
-  };
-
-  const getMessages = async () => {
+  const getMessagesFromDatabase = async () => {
     const { token }: IUser = JSON.parse(String(localStorage.getItem('user')));
     const host = process.env.REACT_APP_BACKEND_HOST;
     if (!hashRoomId) return;
@@ -97,17 +92,29 @@ function Message({ socket, selectedPhone, hashRoomId }: Props): JSX.Element {
     }
   };
 
+  const openNewChat = (): void => {
+    if (!localStorage.getItem('user') || !selectedPhone) return;
+    const { phoneNumber }: IUser = JSON.parse(String(localStorage.getItem('user')));
+    socket?.emit('new-chat', { phoneNumber1: selectedPhone, phoneNumber2: phoneNumber, hashRoomId });
+    socket?.once('get-hashRoomId', (hash: string) => {
+      setHashRoomId(hash);
+    });
+  };
+
   useEffect(() => {
-    getMessages();
+    getMessagesFromDatabase();
   }, [hashRoomId]);
 
   useEffect(() => {
-    manageSocketConnection();
+    deleteMessages();
+    openNewChat();
+    addListenerToNewMessage();
   }, [selectedPhone]);
+
   return(
     <div id='container-m'>
       <div id='message-container'>
-        <h2>Conversando com: { getChatWithName() }</h2>
+        <h2>Conversando com: { getNameOfChattingWith() }</h2>
         <div 
           id='messages'
         > {
@@ -133,7 +140,7 @@ function Message({ socket, selectedPhone, hashRoomId }: Props): JSX.Element {
           />
           <button
             disabled={ !messageInput ? true : false}
-            onClick={ sendMessage }
+            onClick={ sendMessageToUser }
           >
           Enviar
           </button>
