@@ -1,13 +1,12 @@
-import UserMessageODM from '../Model/UserMessageODM';
+import UserMessageModel from '../Model/UserMessageModel';
 import { IServiceResponse } from '../Interface/UserInterface';
-// import UserMessageModel from '../Model/UserMessageModel';
 import { decryptRoomId } from '../Utils/CryptoJs';
 
 class UserMessageService {
-  private model: UserMessageODM;
+  private model: UserMessageModel;
 
   constructor() {
-    this.model = new UserMessageODM;
+    this.model = new UserMessageModel;
   }
 
   public async getMessage(hashRoomId: string): Promise<IServiceResponse> {

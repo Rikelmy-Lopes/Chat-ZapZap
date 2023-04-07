@@ -14,7 +14,7 @@ function MessageItem({ userName, message, createdAt }: IMessage): JSX.Element {
           className='time'
           date={ Number(createdAt) }
           fromNow={ true }
-          interval={ 60 * 1000 }
+          interval={ 60 * 1000 } // 1 minute
           locale='pt-br'
         />
       </div>

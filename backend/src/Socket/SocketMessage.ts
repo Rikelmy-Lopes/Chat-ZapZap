@@ -1,11 +1,9 @@
 import { Server } from 'socket.io';
 import { Socket } from 'socket.io/dist/socket';
 import { decryptRoomId } from '../Utils/CryptoJs';
-// import UserMessageModel from '../Model/UserMessageModel';
-import UserMessageODM from '../Model/UserMessageODM';
+import UserMessageODM from '../Model/UserMessageModel';
 
 export default (socket: Socket, io: Server) => {
-  // const userMessageModel = new UserMessageModel();
   const userMessageModel = new UserMessageODM();
   socket.on('new-message', async ({ message, hashRoomId, userName, createdAt }) => {
     const decryptedRoomId: string =  decryptRoomId(hashRoomId);
