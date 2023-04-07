@@ -6,8 +6,9 @@ import Header from '../../Components/Header/Header';
 import { useNavigate } from 'react-router-dom';
 import { validateToken  } from '../../Utils/Auth';
 import { IUser } from '../../Interface/Interfaces';
+import ContactItem from '../../Components/ContactItem/ContactItem';
 
-function Contacts() {
+function Contacts(): JSX.Element {
   const history = useNavigate();
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [contacts, setContacts] = useState<IContact[]>([]);
@@ -76,20 +77,15 @@ function Contacts() {
       <Header />
       <div id='contact-container'>
         <div>
-          { contacts.map((contact, index) => (
-            <div
-              id='contact'
-              key={`${index}`}
-            >
-              <span> Nome: <strong>{ contact.name }</strong> </span>
-              <span> Numero de Telefone: { contact.phoneNumber } </span>
-              <button
-                onClick={ () => deleteContact(contact.phoneNumber)}
-              >
-                Deletar
-              </button>
-            </div>
-          ))
+          { contacts.map((contact) => {
+            return (
+              <ContactItem
+                key={contact.phoneNumber}
+                contact={contact}
+                deleteContact={ deleteContact }
+              />
+            );
+          })
           }
         </div>
         <div id='add-contact-container'>

@@ -3,7 +3,7 @@ import React, { ReactElement, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Register.css';
 
-function Register() {
+function Register(): JSX.Element {
   const history = useNavigate();
   const [ phoneNumber, setPhoneNumber ] = useState<string>('');
   const [ name, setName ] = useState<string>('');

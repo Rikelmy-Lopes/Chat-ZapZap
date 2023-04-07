@@ -1,7 +1,7 @@
 export interface IServiceResponse {
     success: boolean,
     message: string
-    data?: any | undefined,
+    data?: unknown | undefined,
 
 }
 

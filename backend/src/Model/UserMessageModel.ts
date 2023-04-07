@@ -1,34 +1,32 @@
-import UserMessage from '../database/SQL/model/UserMessage';
-import User from '../database/SQL/model/User';
-import UserModel from './UserModel';
-import { IMessage } from '../Interface/UserInterface';
+import { Schema } from 'mongoose';
+import { IMessage, IUsersMessage, IUsersMessageODM } from '../Interface/MessageODM';
+import AbstractODM from '../database/NOSQL/AbstractODM';
 
-class UserMessageModel {
-  private model: typeof UserMessage;
-  private userModel: UserModel;
 
-  constructor(){
-    this.model = UserMessage;
-    this.userModel = new UserModel();
+class UserMessageModel extends AbstractODM<IUsersMessageODM> {
+  constructor() {
+    const schema = new Schema<IUsersMessageODM>({
+      roomId: { type: String, required: true },
+      message: { type: Schema.Types.Mixed, required: true},
+    });
+    super(schema, 'Message');
   }
 
-  public async saveMessage(message: string, roomId: string, phoneNumber: string): Promise<void> {
-    const { id } = await this.userModel.getUserByPhone(phoneNumber) as User;
-    this.model.create({ userId: id, roomId, message });
+  public async saveMessage(UserMessage: IUsersMessage): Promise<void> {
+    await this.model.updateOne({ roomId: UserMessage.roomId }, {
+      roomId: UserMessage.roomId,
+      $push: { message: UserMessage.message }
+    }, {
+      upsert: true,
+    });
+
+    return;
   }
 
   public async getMessages(roomId: string): Promise<IMessage[]> {
-    const messages = await this.model.findAll({
-      where: { roomId },
-      order: [
-        ['createdAt', 'ASC']
-      ],
-      attributes: { exclude: ['userId', 'roomId', ] },
-      include: [
-        { model: User, as: 'user', attributes: ['name']}
-      ]
-    }) as unknown;
-    return messages as IMessage[];
+    const result = await this.model.findOne({ roomId });
+
+    return result?.message || [];
   }
 }
 

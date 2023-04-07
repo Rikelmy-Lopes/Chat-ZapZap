@@ -1,5 +1,5 @@
 import { Response, Request } from 'express';
-import UserMessageODM from '../Model/UserMessageODM';
+import UserMessageODM from '../Model/UserMessageModel';
 import UserMessageService from '../Service/UserMessageService';
 
 class UserMessageController {

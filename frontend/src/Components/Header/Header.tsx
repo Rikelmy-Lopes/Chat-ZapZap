@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { IUser } from '../../Interface/Interfaces';
 import './Header.css';
 
-function Header() {
+function Header(): JSX.Element {
   const { pathname } = useLocation();
   const [userName, setUserName] = useState<string>('');
 
