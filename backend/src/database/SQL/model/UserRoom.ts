@@ -4,32 +4,32 @@ import UsersModel from './User';
 
 
 class UserRoom extends Model {
-  declare roomId: number;
-  declare userId1: number;
-  declare userId2: string;
+  declare roomId: string;
+  declare phoneNumber1: string;
+  declare phoneNumber2: string;
 }
 
 UserRoom.init({
   roomId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     primaryKey: true,
     allowNull: false,
     autoIncrement: true,
   },
-  userId1: {
-    type: DataTypes.INTEGER,
+  phoneNumber1: {
+    type: DataTypes.STRING,
     allowNull: false,
     references: {
       model: 'users',
-      key: 'id',
+      key: 'phoneNumber',
     }
   },
-  userId2: {
-    type: DataTypes.INTEGER,
+  phoneNumber2: {
+    type: DataTypes.STRING,
     allowNull: false,
     references: {
       model: 'users',
-      key: 'id',
+      key: 'phoneNumber',
     }
   }
 }, {
@@ -42,12 +42,12 @@ UserRoom.init({
 
 UserRoom.belongsTo(UsersModel, {
   as: 'user1',
-  foreignKey: 'userId1'
+  foreignKey: 'phoneNumber1'
 });
 
 UserRoom.belongsTo(UsersModel, {
   as: 'user2',
-  foreignKey: 'userId2'
+  foreignKey: 'phoneNumber2'
 });
 
 export default UserRoom;

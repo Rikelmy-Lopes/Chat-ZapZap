@@ -4,6 +4,17 @@ import UserModel from './UserModel';
 import { Op } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 
+interface IAllRooms {
+  user1: {
+    phoneNumber: string,
+    name: string,
+  }
+  user2: {
+    phoneNumber: string,
+    name: string,
+  }
+}
+
 class UserRoomModel {
   private model: typeof UserRoom;
   private userModel: UserModel;
@@ -11,6 +22,30 @@ class UserRoomModel {
   constructor () {
     this.model = UserRoom;
     this.userModel = new UserModel();
+  }
+
+  public async getAllRooms(phoneNumber: string): Promise<IAllRooms[]> {
+    const rooms = this.model.findAll({
+      attributes: { exclude: ['roomId', 'phoneNumber1', 'phoneNumber2']},
+      where: {
+        [Op.or]: [
+          { '$user1.phone_number$': phoneNumber }, 
+          { '$user2.phone_number$': phoneNumber },
+        ]
+      },
+      include: [
+        { 
+          model: User, 
+          as: 'user1',
+          attributes: { exclude: ['password' ]}
+        },
+        { model: User, 
+          as: 'user2',
+          attributes: { exclude: ['password' ]}
+        }
+      ]}) as unknown;
+
+    return rooms as IAllRooms[];
   }
 
   public async getRoom(phoneNumber1: string, phoneNumber2: string): Promise<string | undefined> {
@@ -44,8 +79,8 @@ class UserRoomModel {
     if (user1 && user2) {
       const { roomId }: UserRoom = await this.model.create({ 
         roomId: uuidv4(), 
-        userId1: user1.id, 
-        userId2: user2.id });
+        phoneNumber1: user1.phoneNumber, 
+        phoneNumber2: user2.phoneNumber });
 
       return String(roomId);
     }

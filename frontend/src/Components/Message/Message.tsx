@@ -8,9 +8,10 @@ import MessageItem from '../MessageItem/MessageItem';
 interface Props {
   socket: Socket | undefined;
   selectedPhone: string;
+  contacts: IContact[],
 }
 
-function Message({ socket, selectedPhone }: Props): JSX.Element {
+function Message({ socket, selectedPhone, contacts }: Props): JSX.Element {
   const [ messageInput, setMessageInput ] = useState<string>('');
   const [ messages, setMessages ] = useState<IMessage[]>([]);
   const [ hashRoomId, setHashRoomId ] = useState<string>('');
@@ -24,7 +25,6 @@ function Message({ socket, selectedPhone }: Props): JSX.Element {
   };
 
   const getNameOfChattingWith = (): string | undefined => {
-    const contacts = JSON.parse(String(localStorage.getItem('contacts'))) as IContact[];
     const contact: IContact | undefined = contacts.find((contact) => contact.phoneNumber === selectedPhone);
     return contact?.name;
   };
