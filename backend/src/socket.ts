@@ -15,7 +15,7 @@ io.on('connection', (socket: Socket) => {
   console.log('\x1b[32m%s\x1b[0m', `Socket conectado: ${socket.id} `);
     
   socketChat(socket);
-  
+
   socketMessage(socket, io);
   
   socket.on('disconnect', () => {
