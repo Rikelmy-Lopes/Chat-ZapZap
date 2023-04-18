@@ -21,8 +21,8 @@ function Header(): JSX.Element {
       <p>Nome: { userName }</p>
       {
         pathname.includes('/chats') ? 
-          <Link to='/contacts'>
-        Contatos
+          <Link to='/new-chat'>
+          New Chat
           </Link>
           : 
           <Link to='/chats'>

@@ -1,5 +1,4 @@
 
-
 html, body {
     height: 100%;
     margin: 0;
@@ -50,14 +49,4 @@ html, body {
     text-decoration: none;
     color: black;
     font-weight: 700;
-}
-
-.error-message {
-    display: none;
-    font-weight: 600;
-    width: fit-content;
-    background-color: red;
-    color: white;
-    padding: 5px 15px;
-    border-radius: 8px;
 }

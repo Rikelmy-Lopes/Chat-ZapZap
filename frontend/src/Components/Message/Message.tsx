@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import './Message.css';
 import { IContact, IMessage, IUser } from '../../Interface/Interfaces';
 import axios from 'axios';
-import { Socket } from 'socket.io-client';
 import MessageItem from '../MessageItem/MessageItem';
+import socketContext from '../../Context/SocketContext';
 
 interface Props {
-  socket: Socket | undefined;
   selectedPhone: string;
   contacts: IContact[],
 }
 
-function Message({ socket, selectedPhone, contacts }: Props): JSX.Element {
+function Message({ selectedPhone, contacts }: Props): JSX.Element {
+  const socket = useContext(socketContext);
   const [ messageInput, setMessageInput ] = useState<string>('');
   const [ messages, setMessages ] = useState<IMessage[]>([]);
   const [ hashRoomId, setHashRoomId ] = useState<string>('');
@@ -95,7 +95,7 @@ function Message({ socket, selectedPhone, contacts }: Props): JSX.Element {
   const openNewChat = (): void => {
     if (!localStorage.getItem('user') || !selectedPhone) return;
     const { phoneNumber }: IUser = JSON.parse(String(localStorage.getItem('user')));
-    socket?.emit('new-chat', { phoneNumber1: selectedPhone, phoneNumber2: phoneNumber, hashRoomId });
+    socket?.emit('new-chat', { toPhoneNumber: selectedPhone, fromPhoneNumber: phoneNumber });
     socket?.once('get-hashRoomId', (hash: string) => {
       setHashRoomId(hash);
     });

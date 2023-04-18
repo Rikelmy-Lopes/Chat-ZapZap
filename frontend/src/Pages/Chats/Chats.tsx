@@ -5,13 +5,11 @@ import { IContact } from '../../Interface/Interfaces';
 import './Chats.css';
 import Message from '../../Components/Message/Message';
 import { validateToken  } from '../../Utils/Auth';
-import { io, Socket } from 'socket.io-client';
 import ContactItem from '../../Components/ContactItem/ContactItem';
 import axios from 'axios';
 
 function Chats(): JSX.Element {
   const history = useNavigate();
-  const [socket, setSocket] = useState<Socket | undefined>();
   const [contacts, setContacts] = useState<IContact[]>([]);
   const [selectedPhone, setSelectedPhone] = useState<null | string>(null);
 
@@ -34,14 +32,7 @@ function Chats(): JSX.Element {
   useEffect((): void => {
     validateToken(history);
     retrieveContacts();
-    setSocket(io('http://192.168.0.189:4000'));
   }, []);
-
-  useEffect(() => {
-    return () => {
-      socket?.disconnect();
-    };
-  }, [socket]);
 
   return(
     <div>
@@ -63,7 +54,6 @@ function Chats(): JSX.Element {
         <div id='messages-section'>
           {selectedPhone && <Message 
             selectedPhone={selectedPhone}
-            socket={ socket }
             contacts={contacts}
           />
           }

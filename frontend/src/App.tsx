@@ -4,17 +4,20 @@ import Login from './Pages/Login/Login';
 import { Route, Routes } from 'react-router-dom';
 import Chats from './Pages/Chats/Chats';
 import Register from './Pages/Register/Register';
-import Contacts from './Pages/Contacts/Contacts';
+import NewChat from './Pages/NewChat/NewChat';
+import SocketProvider from './Context/SocketProvider';
 
 function App() {
   return (
-    <Routes>
-      <Route element={ <Chats/> } path='/chats' />
-      <Route element={ <Login/> } path='/login' />
-      <Route element={ <Register/> } path='/register' />
-      <Route element={ <Contacts/> } path='/contacts' />
-      <Route element={ <Login/> } path='/' />
-    </Routes>
+    <SocketProvider>
+      <Routes>
+        <Route element={ <Chats/> } path='/chats' />
+        <Route element={ <Login/> } path='/login' />
+        <Route element={ <Register/> } path='/register' />
+        <Route element={ <NewChat/> } path='/new-chat' />
+        <Route element={ <Login/> } path='/' />
+      </Routes>
+    </SocketProvider>
   );
 }
 
