@@ -1,7 +1,8 @@
-import React, { memo } from 'react';
-import { IMessage } from '../../Interface/Interfaces';
 import 'moment/locale/pt-br';
+import { memo } from 'react';
 import Moment from 'react-moment';
+import { IMessage } from '../../Interface/Interfaces';
+
 
 function MessageItem({ userName, message, createdAt }: IMessage): JSX.Element {
 

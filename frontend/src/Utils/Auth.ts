@@ -3,7 +3,7 @@ import { NavigateFunction } from 'react-router-dom';
 import { IUser } from '../Interface/Interfaces';
 
 const validateToken = async (history: NavigateFunction): Promise<void> => {
-  const host = process.env.REACT_APP_BACKEND_HOST;
+  const host = import.meta.env.VITE_BACKEND_HOST;
   const { token }: IUser = JSON.parse(String(localStorage.getItem('user'))) || {};
   try {
     await axios.get(`${host}/login/token`, {
@@ -20,6 +20,6 @@ const validateToken = async (history: NavigateFunction): Promise<void> => {
   }
 };
 
-export { 
+export {
   validateToken
 };

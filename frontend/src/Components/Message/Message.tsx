@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
-import './Message.css';
-import { IContact, IMessage, IUser } from '../../Interface/Interfaces';
 import axios from 'axios';
-import MessageItem from '../MessageItem/MessageItem';
+import React, { useContext, useEffect, useState } from 'react';
 import socketContext from '../../Context/SocketContext';
+import { IContact, IMessage, IUser } from '../../Interface/Interfaces';
+import MessageItem from '../MessageItem/MessageItem';
+import './Message.css';
 
 interface Props {
   selectedPhone: string;
@@ -76,7 +76,7 @@ function Message({ selectedPhone, contacts }: Props): JSX.Element {
 
   const getMessagesFromDatabase = async () => {
     const { token }: IUser = JSON.parse(String(localStorage.getItem('user')));
-    const host = process.env.REACT_APP_BACKEND_HOST;
+    const host = import.meta.env.VITE_BACKEND_HOST;
     if (!hashRoomId) return;
     try {
       const { data } = await axios.get(`${host}/message`, {
