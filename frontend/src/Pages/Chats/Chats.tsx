@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Header from '../../Components/Header/Header';
-import { IContact } from '../../Interface/Interfaces';
-import './Chats.css';
-import Message from '../../Components/Message/Message';
-import { validateToken  } from '../../Utils/Auth';
-import ContactItem from '../../Components/ContactItem/ContactItem';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import ContactItem from '../../Components/ContactItem/ContactItem';
+import Header from '../../Components/Header/Header';
+import Message from '../../Components/Message/Message';
+import { IContact } from '../../Interface/Interfaces';
+import { validateToken } from '../../Utils/Auth';
+import './Chats.css';
 
 function Chats(): JSX.Element {
   const history = useNavigate();
@@ -14,7 +14,7 @@ function Chats(): JSX.Element {
   const [selectedPhone, setSelectedPhone] = useState<null | string>(null);
 
   const retrieveContacts =  async (): Promise<void> => {
-    const host = process.env.REACT_APP_BACKEND_HOST;
+    const host = import.meta.env.VITE_BACKEND_HOST;
     const { phoneNumber } = JSON.parse(String(localStorage.getItem('user')));
     try {
       const { data } = await axios.get(`${host}/rooms`, {

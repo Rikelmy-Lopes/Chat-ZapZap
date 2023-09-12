@@ -1,7 +1,7 @@
-import React, { useState, useEffect, PropsWithChildren } from 'react';
-import socketContext from './SocketContext';
-import { io, Socket } from 'socket.io-client';
+import { PropsWithChildren, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { Socket, io } from 'socket.io-client';
+import socketContext from './SocketContext';
 
 function SocketProvider({ children }: PropsWithChildren ) {
   const allowRoutes: string[] = ['/chats', '/contacts'];
@@ -9,8 +9,9 @@ function SocketProvider({ children }: PropsWithChildren ) {
   const [ socket, setSocket ] = useState<Socket | undefined>(undefined);
 
   useEffect(() => {
+    const socketHost = import.meta.env.VITE_BACKEND_HOST_SOCKET;
     if (allowRoutes.includes(pathname) && socket === undefined) {
-      setSocket(io('http://192.168.0.189:4000'));
+      setSocket(io(socketHost));
     }
   }, [pathname]);
 
