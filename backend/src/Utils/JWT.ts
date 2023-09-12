@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
 
-const createToken = (id: number, name: string, phoneNumber: string): string => {
+const createToken = (name: string, phoneNumber: string): string => {
   const secret = String(process.env.SECRET_KEY);
-  const token = jwt.sign({ id, name, phoneNumber }, secret);
+  const token = jwt.sign({name, phoneNumber }, secret);
   return token;
 };
 

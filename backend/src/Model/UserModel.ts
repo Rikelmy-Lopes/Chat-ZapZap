@@ -20,9 +20,9 @@ class UserModel {
 
   public async save(user: IUser): Promise<User> {
     const result: User = await this.model.create({
+      phoneNumber: user.phoneNumber,
       name: user.name,
       password: await encryptPassword(user.password),
-      phoneNumber: user.phoneNumber
     });
     
     return result;

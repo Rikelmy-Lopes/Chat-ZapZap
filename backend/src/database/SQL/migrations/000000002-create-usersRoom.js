@@ -7,24 +7,24 @@ module.exports = {
         type: Sequelize.STRING,
         autoIncrement: false,
       },
-      user_id1: {
+      phone_number1: {
         allowNull: false,
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
         references: {
           model: 'users',
-          key: 'id',
+          key: 'phone_number',
         }
       },
-      user_id2: {
+      phone_number2: {
         allowNull: false,
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
         references: {
           model: 'users',
-          key: 'id',
+          key: 'phone_number',
         }
       },
     });

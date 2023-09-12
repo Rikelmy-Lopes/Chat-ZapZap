@@ -17,8 +17,8 @@ class UserService {
       return { success: false, message: 'User not Found'};
     }
     if (await checkPassword(password, result.password)) {
-      const { id, name, phoneNumber } = result;
-      const token = jwt.createToken(id, name, phoneNumber);
+      const { name, phoneNumber } = result;
+      const token = jwt.createToken(name, phoneNumber);
       return { success: true, message: 'Success', data: { name, phoneNumber, token }};
     } else {
       return { success: false, message: 'Password not Correct'};
@@ -35,8 +35,8 @@ class UserService {
     const userAlreadyExist = await this.model.getUserByPhone(user.phoneNumber);
 
     if (userAlreadyExist) return { success: false, message: 'User already Exist' };
-    const { id, name, phoneNumber } = await this.model.save(user);
-    const result = { name, phoneNumber, token: jwt.createToken(id, name, phoneNumber)};
+    const { name, phoneNumber } = await this.model.save(user);
+    const result = { name, phoneNumber, token: jwt.createToken( name, phoneNumber)};
     return { success: true, message: 'Success', data: result };
   }
 

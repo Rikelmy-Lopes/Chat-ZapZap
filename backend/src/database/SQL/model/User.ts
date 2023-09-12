@@ -3,24 +3,19 @@ import db from '.';
 
 
 class User extends Model {
-  declare id: number;
-  declare name: string;
   declare phoneNumber: string;
+  declare name: string;
   declare password: string;
 }
 
 User.init({
-  id: {
-    type: DataTypes.INTEGER,
+  phoneNumber: {
     primaryKey: true,
-    allowNull: false,
-    autoIncrement: true,
-  },
-  name: {
     type: DataTypes.STRING,
     allowNull: false,
+    autoIncrement: false
   },
-  phoneNumber: {
+  name: {
     type: DataTypes.STRING,
     allowNull: false,
   },

@@ -1,9 +1,8 @@
 import express from 'express';
 import cors from 'cors';
-import path from 'path';
-import ejs from 'ejs';
 import userRouter from './Router/userRouter';
 import messageRouter from './Router/messageRouter';
+import userRoomRouter from './Router/userRoomRouter';
 
 const app = express();
 
@@ -14,6 +13,8 @@ app.use(express.json());
 app.use(userRouter);
 
 app.use(messageRouter);
+
+app.use(userRoomRouter);
 
 
 export default app;
