@@ -1,7 +1,9 @@
 FROM node:lts-alpine
+USER node
 WORKDIR /backend-docker
-COPY package*.json .
-COPY . .
+RUN chown node:node /backend-docker
+COPY --chown=node:node package*.json ./
+COPY --chown=node:node . .
 RUN npm install
 EXPOSE 3001
 EXPOSE 4000

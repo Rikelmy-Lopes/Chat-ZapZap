@@ -1,47 +1,52 @@
-version: '3.9'
+version: '3.9'  # Versão do Docker Compose
+
 services:
   frontend:
-    container_name: frontend
-    build: ./frontend
-    tty: true
-    stdin_open: true
+    container_name: frontend  # Nome do contêiner para o serviço Frontend
+    build: ./frontend  # Caminho para o diretório de build do Frontend
+    tty: true  # Torna o terminal interativo para o Frontend
+    stdin_open: true  # Mantém a entrada padrão aberta para o Frontend
     ports:
-      - 3000:3000
-    working_dir: /frontend-docker
+      - 3000:3000  # Mapeamento de porta para o Frontend (host:contêiner)
+    working_dir: /frontend-docker  # Diretório de trabalho dentro do contêiner do Frontend
     volumes:
-      - ./frontend:/frontend-docker
+      - ./frontend:/frontend-docker  # Mapeamento de volume para o código-fonte do Frontend
     depends_on:
-      - backend
+      - backend  # Define a dependência no serviço Backend
+    
+
   backend:
-    container_name: backend
-    build: ./backend
-    tty: true
-    stdin_open: true
+    container_name: backend  # Nome do contêiner para o serviço Backend
+    build: ./backend  # Caminho para o diretório de build do Backend
+    tty: true  # Torna o terminal interativo para o Backend
+    stdin_open: true  # Mantém a entrada padrão aberta para o Backend
     environment:
-      - DB_USER=root
-      - DB_PASS=899899
-      - DB_HOST=db-mysql
-      - DB_PORT=3306
+      - DB_USER=root  # Variável de ambiente: usuário do banco de dados
+      - DB_PASS=899899  # Variável de ambiente: senha do banco de dados
+      - DB_HOST=db-mysql  # Variável de ambiente: host do banco de dados MySQL
+      - DB_PORT=3306  # Variável de ambiente: porta do banco de dados MySQL
     ports:
-      - 3001:3001
-      - 4000:4000
-    working_dir: /backend-docker
+      - 3001:3001  # Mapeamento de porta para o Backend (host:contêiner)
+      - 4000:4000  # Mapeamento de outra porta para o Backend (host:contêiner)
+    working_dir: /backend-docker  # Diretório de trabalho dentro do contêiner do Backend
     volumes:
-      - ./backend:/backend-docker
+      - ./backend:/backend-docker  # Mapeamento de volume para o código-fonte do Backend
     depends_on:
-      - db-mysql
-      - db-mongodb
+      - db-mysql  # Define a dependência no serviço MySQL
+      - db-mongodb  # Define a dependência no serviço MongoDB
+
   db-mysql:
-    container_name: db-mysql
-    image: mysql:latest
-    restart: 'always'
+    container_name: db-mysql  # Nome do contêiner para o serviço MySQL
+    image: mysql:latest  # Imagem a ser usada para o contêiner MySQL
+    restart: 'always'  # Sempre reinicie o contêiner em caso de falha
     environment:
-      - MYSQL_ROOT_PASSWORD=899899
+      - MYSQL_ROOT_PASSWORD=899899  # Senha do usuário root do MySQL
     ports:
-      - 33066:3306
+      - 33066:3306  # Mapeamento de porta para o MySQL (host:contêiner)
+
   db-mongodb:
-    container_name: db-mongodb
-    image: mongo:latest
-    restart: 'always'
+    container_name: db-mongodb  # Nome do contêiner para o serviço MongoDB
+    image: mongo:latest  # Imagem a ser usada para o contêiner MongoDB
+    restart: 'always'  # Sempre reinicie o contêiner em caso de falha
     ports:
-      - 27018:27017
+      - 27018:27017  # Mapeamento de porta para o MongoDB (host:contêiner)
