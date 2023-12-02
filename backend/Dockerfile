@@ -1,7 +1,7 @@
-FROM node:lts-alpine
+FROM node:18-alpine
 USER node
-WORKDIR /backend-docker
-RUN chown node:node /backend-docker
+WORKDIR /home/backend-docker
+RUN chown node:node /home/backend-docker
 COPY --chown=node:node package*.json ./
 COPY --chown=node:node . .
 RUN npm install
