@@ -51,7 +51,7 @@ function Register(): JSX.Element {
   };
 
   const registerUser = async (): Promise<void> => {
-    const host = process.env.REACT_APP_BACKEND_HOST;
+    const host = import.meta.env.VITE_BACKEND_HOST;
     try {
       const { data } = await axios.post(`${host}/register`, {
         phoneNumber: `+${selectedCode}${phoneNumber}`,

@@ -35,7 +35,7 @@ function NewChat() {
   };
 
   const verifyIfNumberExist = async (): Promise<boolean> => {
-    const host = process.env.REACT_APP_BACKEND_HOST;
+    const host = import.meta.env.VITE_BACKEND_HOST;
     const { token }: IUser = JSON.parse(String(localStorage.getItem('user')));
     try {
       await axios.get(`${host}/user/+${selectedCode}${toPhoneNumber}`, {
