@@ -3,6 +3,7 @@ import app from './app';
 import connectToDatabase from './database/NOSQL/config/connection';
 import socket from './socket';
 
+
 const API_PORT = process.env.API_PORT ? Number(process.env.API_PORT) : 3001;
 const SOCKET_PORT = process.env.SOCKET_PORT ? Number(process.env.SOCKET_PORT) : 4000;
 

@@ -5,8 +5,8 @@
   "main": "./build/server.js",
   "scripts": {
     "prestart": "rm -rf ./build",
-    "start": "tsc --project tsconfig.json && node build/src/server.js",
-    "dev": "tsnd src/server.ts",
+    "start": "npm run build && node build/src/server.js",
+    "dev": "tsx watch src/server.ts",
     "build": "tsc --project tsconfig.json",
     "db:create": "npx sequelize-cli db:drop && npx sequelize-cli db:create",
     "db:migrate": "npx sequelize-cli db:migrate",
@@ -45,8 +45,7 @@
     "@typescript-eslint/eslint-plugin": "^6.13.1",
     "@typescript-eslint/parser": "^6.13.1",
     "eslint": "^8.55.0",
-    "ts-node": "^10.9.1",
-    "ts-node-dev": "^2.0.0",
+    "tsx": "^4.6.2",
     "typescript": "^5.3.2"
   }
 }
