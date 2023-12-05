@@ -1,11 +1,11 @@
-import 'dotenv/config';
 import app from './app';
 import connectToDatabase from './database/NOSQL/config/connection';
 import socket from './socket';
+import { config } from './config/config';
 
 
-const API_PORT = process.env.API_PORT ? Number(process.env.API_PORT) : 3001;
-const SOCKET_PORT = process.env.SOCKET_PORT ? Number(process.env.SOCKET_PORT) : 4000;
+const API_PORT = config.server.apiPort;
+const SOCKET_PORT = config.server.socketPort;
 
 connectToDatabase().then(()=> {
   socket.listen(SOCKET_PORT, () => console.log(`Running server SocketIo on: http://localhost:${SOCKET_PORT}`));

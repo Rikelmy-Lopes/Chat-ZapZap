@@ -1,12 +1,12 @@
-import 'dotenv/config';
 import { Options } from 'sequelize';
+import { config } from '../../../config/config';
 
-const config: Options = {
-  username: process.env.DB_USER || 'root',
-  password: process.env.DB_PASS || '899899',
+export const sqlConfig: Options = {
+  username: config.db.sql.username,
+  password: config.db.sql.password,
   database: 'chat-zap-zap',
-  host: process.env.DB_HOST || 'localhost',
-  port: Number(process.env.DB_PORT) || 3306,
+  host: config.db.sql.host,
+  port: config.db.sql.port,
   dialect: 'mysql',
   dialectOptions: {
     timezone: '-03:00',
@@ -15,4 +15,3 @@ const config: Options = {
   timezone: '-03:00'
 };
   
-module.exports = config;

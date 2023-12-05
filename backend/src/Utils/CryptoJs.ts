@@ -1,8 +1,9 @@
 import CryptoJS from 'crypto-js';
-import 'dotenv';
+import { config } from '../config/config';
+
 
 const encryptRoomId = (roomId: string): string => {
-  const key = CryptoJS.enc.Hex.parse(String(process.env.BCRYPT_KEY));
+  const key = CryptoJS.enc.Hex.parse(config.security.bcryptKey);
   const encrypted = CryptoJS.AES.encrypt(roomId, key, {
     mode: CryptoJS.mode.ECB,
     padding: CryptoJS.pad.Pkcs7
@@ -11,7 +12,7 @@ const encryptRoomId = (roomId: string): string => {
 };
 
 const decryptRoomId = (hashRoomId: string): string => {
-  const key = CryptoJS.enc.Hex.parse(process.env.BCRYPT_KEY as string);
+  const key = CryptoJS.enc.Hex.parse(config.security.bcryptKey);
   const decrypted = CryptoJS.AES.decrypt(hashRoomId, key, {
     mode: CryptoJS.mode.ECB,
     padding: CryptoJS.pad.Pkcs7
