@@ -5,14 +5,18 @@ import { AuthMiddleware } from '../Middleware/AuthMiddleware';
 import { UserService } from '../Service/UserService';
 import { UserRepository } from '../Repository/UserRepository';
 import { UserModel } from '../database/SQL/model/UserModel';
+import { BCrypt } from '../Utils/BCrypt';
+import { Jwt } from '../Utils/Jwt';
 
 const userRouter = express();
 
+const jwt = new Jwt();
 const userMiddleware = new UserMiddleware();
-const authMiddleware = new AuthMiddleware();
+const authMiddleware = new AuthMiddleware(jwt);
 
+const bcrypt = new BCrypt();
 const userRepository = new UserRepository(UserModel);
-const userService = new UserService(userRepository);
+const userService = new UserService(userRepository, bcrypt, jwt);
 const userController = new UserController(userService);
 
 

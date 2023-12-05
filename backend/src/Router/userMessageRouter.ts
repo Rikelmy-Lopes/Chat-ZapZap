@@ -4,13 +4,17 @@ import { AuthMiddleware } from '../Middleware/AuthMiddleware';
 import { UserMessageService } from '../Service/UserMessageService';
 import { UserMessageRepository } from '../Repository/UserMessageRepository';
 import { userRoomRouter } from './userRoomRouter';
+import { Jwt } from '../Utils/Jwt';
+import { CryptoHandler } from '../Utils/CryptoHandler';
 
 const userMessageRouter = express();
 
-const authMiddleware = new AuthMiddleware();
+const jwt = new Jwt();
+const authMiddleware = new AuthMiddleware(jwt);
 
+const cryptoHandler = new CryptoHandler();
 const userMessageRepository = new UserMessageRepository();
-const userMessageService = new UserMessageService(userMessageRepository);
+const userMessageService = new UserMessageService(userMessageRepository, cryptoHandler);
 const userMessageController = new UserMessageController(userMessageService);
 
 

@@ -1,13 +1,17 @@
 import { Response, Request, NextFunction } from 'express';
-import * as jwt from '../Utils/JWT';
+import { IJwt } from '../Interface/Utils/IJwt';
 
 export class AuthMiddleware {
+  private jwt: IJwt;
 
+  constructor(jwt: IJwt) {
+    this.jwt = jwt;
+  }
 
   public isTokenValid(req: Request, res: Response, next: NextFunction) {
     const { authorization } = req.headers;
     try {
-      const isValid = jwt.validateToken(String(authorization).replace('Bearer ', ''));
+      const isValid = this.jwt.verify(String(authorization).replace('Bearer ', ''));
       if (isValid) return res.status(200).json({ message: 'Success' });
       return res.status(401).json({ message: 'Failed' });
     } catch (error) {
@@ -18,7 +22,7 @@ export class AuthMiddleware {
   public validateToken(req: Request, res: Response, next: NextFunction) {
     const { authorization } = req.headers;
     try {
-      const isValid = jwt.validateToken(String(authorization).replace('Bearer ', ''));
+      const isValid = this.jwt.verify(String(authorization).replace('Bearer ', ''));
       if(isValid) return next();
       return res.status(401).json({ message: 'Unauthorized'});
     } catch (error) {

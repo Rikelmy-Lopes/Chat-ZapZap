@@ -1,14 +1,18 @@
 import { IUser, IServiceResponse } from './../Interface/UserInterface';
-import * as jwt from '../Utils/JWT';
-import { checkPassword } from '../Utils/BCrypt';
 import { IUserRepository } from '../Interface/Repository/IUserRepository';
 import { IUserService } from '../Interface/Service/IUserService';
+import { IBCrypt } from '../Interface/Utils/IBCrypt';
+import { IJwt } from '../Interface/Utils/IJwt';
 
 export class UserService implements IUserService {
   private userRepository: IUserRepository;
+  private bcrypt: IBCrypt;
+  private jwt: IJwt;
 
-  constructor(userRepository: IUserRepository) {
+  constructor(userRepository: IUserRepository, bcrypt: IBCrypt, jwt: IJwt) {
     this.userRepository = userRepository;
+    this.bcrypt = bcrypt;
+    this.jwt = jwt;
   }
 
   public async validateUser(phoneNumber: string, password: string): Promise<IServiceResponse> {
@@ -16,9 +20,9 @@ export class UserService implements IUserService {
     if (!result) {
       return { success: false, message: 'User not Found'};
     }
-    if (await checkPassword(password, result.password)) {
+    if (await this.bcrypt.validate(password, result.password)) {
       const { name, phoneNumber } = result;
-      const token = jwt.createToken(name, phoneNumber);
+      const token = this.jwt.create({ name, phoneNumber });
       return { success: true, message: 'Success', data: { name, phoneNumber, token }};
     } else {
       return { success: false, message: 'Password not Correct'};
@@ -26,7 +30,7 @@ export class UserService implements IUserService {
   }
 
   public validateToken(token: string): IServiceResponse {
-    const isValid = jwt.validateToken(token.replace('Bearer ', ''));
+    const isValid = this.jwt.verify(token.replace('Bearer ', ''));
     if (isValid) return {success: true, message: 'Token Valid'};
     return { success: false, message: 'Invalid Token' };
   }
@@ -36,7 +40,7 @@ export class UserService implements IUserService {
 
     if (userAlreadyExist) return { success: false, message: 'User already Exist' };
     const { name, phoneNumber } = await this.userRepository.save(user);
-    const result = { name, phoneNumber, token: jwt.createToken( name, phoneNumber)};
+    const result = { name, phoneNumber, token: this.jwt.create({ name, phoneNumber })};
     return { success: true, message: 'Success', data: result };
   }
 

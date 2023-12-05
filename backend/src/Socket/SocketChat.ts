@@ -1,5 +1,5 @@
 import { Socket } from 'socket.io/dist/socket';
-import { encryptRoomId } from '../Utils/CryptoJs';
+import { CryptoHandler } from '../Utils/CryptoHandler';
 import { UserRoomRepository } from '../Repository/UserRoomRepository';
 import { UserModel } from '../database/SQL/model/UserModel';
 import { UserRepository } from '../Repository/UserRepository';
@@ -8,6 +8,7 @@ import { UserRoomModel } from '../database/SQL/model/UserRoomModel';
 export default (socket: Socket): void => {
   const userRepository = new UserRepository(UserModel);
   const userRoomRepository = new UserRoomRepository(UserRoomModel, userRepository);
+  const cryptoHandler = new CryptoHandler();
   
   socket.on('new-chat', async ({ toPhoneNumber, fromPhoneNumber }) => {
     socket.rooms.forEach((room) => {
@@ -25,7 +26,7 @@ export default (socket: Socket): void => {
       socket.join(roomId);
     }
     if (!roomId) return;
-    const encryptedRoomId: string = encryptRoomId(roomId);
+    const encryptedRoomId: string = cryptoHandler.encrypt(roomId);
     socket.emit('get-hashRoomId', encryptedRoomId);
   });
 };

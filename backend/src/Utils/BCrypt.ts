@@ -1,16 +1,15 @@
 import bcrypt from 'bcrypt';
+import { IBCrypt } from '../Interface/Utils/IBCrypt';
 
-const encryptPassword =  async (password: string): Promise<string> => {
-  const hashPassword = await bcrypt.hash(password, 12);
-  return hashPassword;
-};
 
-const checkPassword = async (password: string, hash: string): Promise<boolean> => {
-  const result = await bcrypt.compare(password, hash);
-  return result;
-};
+export class BCrypt implements IBCrypt {
 
-export {
-  encryptPassword,
-  checkPassword,
-};
+  async encrypt(data: string): Promise<string> {
+    return await bcrypt.hash(data, 12);
+  }
+
+  async validate(data: string, hashedData: string): Promise<boolean> {
+    return await bcrypt.compare(data, hashedData);
+  }
+
+}
