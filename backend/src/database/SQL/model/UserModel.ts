@@ -2,13 +2,13 @@ import { DataTypes , Model } from 'sequelize';
 import db from '.';
 
 
-class User extends Model {
+export class UserModel extends Model {
   declare phoneNumber: string;
   declare name: string;
   declare password: string;
 }
 
-User.init({
+UserModel.init({
   phoneNumber: {
     primaryKey: true,
     type: DataTypes.STRING,
@@ -30,5 +30,3 @@ User.init({
   timestamps: false,
   
 });
-
-export default User;
