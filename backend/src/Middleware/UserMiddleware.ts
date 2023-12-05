@@ -1,45 +1,53 @@
-import { IUser } from './../Interface/UserInterface';
-import { Response, Request, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
+import { z } from 'zod';
 
-class UserMiddleware {
-  private response: Response;
-  private request: Request;
-  private next: NextFunction;
-  private ERROR_MESSAGE_FIELDS: string;
-  
-  constructor(request: Request, response: Response, next: NextFunction) {
-    this.request = request;
-    this.response = response;
-    this.next = next;
-    this.ERROR_MESSAGE_FIELDS = 'All fields must be filled out';
+export class UserMiddleware {
+
+
+  async login(req: Request, res: Response, next: NextFunction) {
+
+    try {
+      const user = req.body;
+      const loginSchema = z.object({
+        phoneNumber: z.string().min(9),
+        password: z.string().min(4),
+      });
+
+      await loginSchema.parseAsync(user);
+      next();
+    } catch (error) {
+      next(error);
+    }
   }
 
-  public validateLogin() {
-    const { phoneNumber, password } = this.request.body;
-    if (!phoneNumber || !password) {
-      return this.response.status(400).json({ message: this.ERROR_MESSAGE_FIELDS});
-    }
+  async register(req: Request, res: Response, next: NextFunction) {
+    try {
+      const user = req.body;
+      const userSchema = z.object({
+        name: z.string(),
+        password: z.string().min(4),
+        phoneNumber: z.string().min(9),
+      });
 
-    this.next();
+      await userSchema.parseAsync(user);
+      next();
+    } catch (error) {
+      // must return a http 400
+      next(error);
+    }
   }
 
-  public validateUser() {
-    const user = this.request.body as IUser;
-    if (!user.name || !user.password || !user.phoneNumber) {
-      return this.response.status(400).json({ message: this.ERROR_MESSAGE_FIELDS });
+  async validateGetUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const params = req.params;
+
+      const phoneNumberSchema = z.object({
+        phoneNumber: z.string().min(9)
+      });
+
+      await phoneNumberSchema.parse(params);
+    } catch (error) {
+      next(error);
     }
-
-    this.next();
-  }
-
-  public validateGetUser() {
-    const { phoneNumber } = this.request.params;
-    if (!phoneNumber) {
-      return this.response.status(400).json({ message: this.ERROR_MESSAGE_FIELDS});
-    }
-
-    this.next();
   }
 }
-
-export default UserMiddleware;

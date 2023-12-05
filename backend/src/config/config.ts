@@ -16,7 +16,7 @@ export const config = {
     },
 
     noSql: {   
-      mongodbUrl: process.env.MONGO_DB_URL ? String(process.env.MONGO_DB_URL) : 'localhost'
+      mongodbUrl: process.env.MONGO_DB_URL ? String(process.env.MONGO_DB_URL) : 'mongodb://localhost:27018/Chat-Zap-Zap'
     }
   },
 

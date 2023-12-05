@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2019",
+    "target": "ES2020",
     "module": "CommonJS",
     "sourceMap": false,
     "outDir": "./build/src",
@@ -10,10 +10,9 @@
     "baseUrl": "/",
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "allowJs": true,
     "paths": {
       "*": [

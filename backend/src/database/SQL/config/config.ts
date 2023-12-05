@@ -1,7 +1,7 @@
 import { Options } from 'sequelize';
 import { config } from '../../../config/config';
 
-export const sqlConfig: Options = {
+const sqlConfig: Options = {
   username: config.db.sql.username,
   password: config.db.sql.password,
   database: 'chat-zap-zap',
@@ -15,3 +15,4 @@ export const sqlConfig: Options = {
   timezone: '-03:00'
 };
   
+module.exports = sqlConfig;

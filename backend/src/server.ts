@@ -1,4 +1,4 @@
-import app from './app';
+import { app } from './app';
 import connectToDatabase from './database/NOSQL/config/connection';
 import socket from './socket';
 import { config } from './config/config';

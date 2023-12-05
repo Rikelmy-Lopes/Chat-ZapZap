@@ -1,25 +1,23 @@
-import { Response, Request } from 'express';
-import UserRoomService from '../Service/UserRoomService';
+import { Response, Request, NextFunction } from 'express';
+import { IUserRoomService } from '../Interface/Service/IUserRoomService';
 
-class UserRoomController {
-  private response: Response;
-  private request: Request;
-  private service: UserRoomService;
+export class UserRoomController {
+  private userRoomService: IUserRoomService;
 
-  constructor(request: Request, response: Response) {
-    this.service = new UserRoomService();
-    this.request = request;
-    this.response = response;
+  constructor(userRoomService: IUserRoomService) {
+    this.userRoomService = userRoomService;
   }
 
-  public async getAllRooms() {
-    const { phonenumber: phoneNumber } = this.request.headers;
+  public async getAllRooms(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { phonenumber: phoneNumber } = req.headers;
 
-    const { success, data } = await this.service.getAllRooms(String(phoneNumber));
-    if (success) {
-      return this.response.status(200).json(data);
-    } 
+      const { success, data } = await this.userRoomService.findAllByPhoneNumber(String(phoneNumber));
+      if (success) {
+        return res.status(200).json(data);
+      } 
+    } catch (error) {
+      next(error);
+    }
   }
 }
-
-export default UserRoomController;

@@ -36,7 +36,7 @@ services:
 
   db-mysql:
     container_name: db-mysql # Nome do contêiner para o serviço MySQL
-    image: mysql:latest # Imagem a ser usada para o contêiner MySQL
+    image: mysql:8 # Imagem a ser usada para o contêiner MySQL
     restart: 'always' # Sempre reinicie o contêiner em caso de falha
     environment:
       - MYSQL_ROOT_PASSWORD=899899 # Senha do usuário root do MySQL

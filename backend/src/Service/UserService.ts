@@ -1,18 +1,18 @@
 import { IUser, IServiceResponse } from './../Interface/UserInterface';
 import * as jwt from '../Utils/JWT';
-import UserModel from '../Model/UserModel';
 import { checkPassword } from '../Utils/BCrypt';
-import UsersModel from '../database/SQL/model/UserModel';
+import { IUserRepository } from '../Interface/Repository/IUserRepository';
+import { IUserService } from '../Interface/Service/IUserService';
 
-class UserService {
-  private model: UserModel;
+export class UserService implements IUserService {
+  private userRepository: IUserRepository;
 
-  constructor() {
-    this.model = new UserModel();
+  constructor(userRepository: IUserRepository) {
+    this.userRepository = userRepository;
   }
 
   public async validateUser(phoneNumber: string, password: string): Promise<IServiceResponse> {
-    const result: UsersModel | null = await this.model.getUserByPhone(phoneNumber);
+    const result = await this.userRepository.findByPhoneNumber(phoneNumber);
     if (!result) {
       return { success: false, message: 'User not Found'};
     }
@@ -32,16 +32,16 @@ class UserService {
   }
 
   public async save(user: IUser): Promise<IServiceResponse> {
-    const userAlreadyExist = await this.model.getUserByPhone(user.phoneNumber);
+    const userAlreadyExist = await this.userRepository.findByPhoneNumber(user.phoneNumber);
 
     if (userAlreadyExist) return { success: false, message: 'User already Exist' };
-    const { name, phoneNumber } = await this.model.save(user);
+    const { name, phoneNumber } = await this.userRepository.save(user);
     const result = { name, phoneNumber, token: jwt.createToken( name, phoneNumber)};
     return { success: true, message: 'Success', data: result };
   }
 
-  public async getUser(phoneNumber: string): Promise<IServiceResponse> {
-    const result = await this.model.getUserByPhone(phoneNumber);
+  public async findByPhoneNumber(phoneNumber: string): Promise<IServiceResponse> {
+    const result = await this.userRepository.findByPhoneNumber(phoneNumber);
 
     if (result) return { success: true, message: 'User Found', data: {
       name: result.name,
@@ -50,5 +50,3 @@ class UserService {
     return {  success: false,  message: 'User not Found' };
   }
 }
-
-export default UserService;

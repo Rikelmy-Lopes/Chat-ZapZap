@@ -1,22 +1,20 @@
-import { Response, Request } from 'express';
-import UserMessageService from '../Service/UserMessageService';
+import { Response, Request, NextFunction } from 'express';
+import { IUserMessageService } from '../Interface/Service/IUserMessageService';
 
-class UserMessageController {
-  private response: Response;
-  private request: Request;
-  private service: UserMessageService;
+export class UserMessageController {
+  private userMessageService: IUserMessageService;
 
-  constructor(request: Request, response: Response) {
-    this.service = new UserMessageService();
-    this.request = request;
-    this.response = response;
+  constructor(userMessageService: IUserMessageService) {
+    this.userMessageService = userMessageService;
   }
 
-  public async getMessage() {
-    const { hashroomid } = this.request.headers;
-    const { success, data } = await this.service.getMessage(String(hashroomid));
-    if (success) return this.response.status(200).json(data);
+  public async getMessage(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { hashroomid } = req.headers;
+      const { success, data } = await this.userMessageService.getMessages(String(hashroomid));
+      if (success) return res.status(200).json(data);
+    } catch (error) {
+      next(error);
+    }
   }
 }
-
-export default UserMessageController;

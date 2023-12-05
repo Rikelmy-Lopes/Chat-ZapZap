@@ -1,15 +1,16 @@
-import UserRoomModel from '../Model/UserRoomModel';
 import { IServiceResponse } from '../Interface/UserInterface';
+import { IUserRoomRepository } from '../Interface/Repository/IUserRoomRepository';
+import { IUserRoomService } from '../Interface/Service/IUserRoomService';
 
-class UserRoomService {
-  private model: UserRoomModel;
+export class UserRoomService implements IUserRoomService {
+  private userRoomRepository: IUserRoomRepository;
 
-  constructor() {
-    this.model = new  UserRoomModel();
+  constructor(userRoomRepository: IUserRoomRepository) {
+    this.userRoomRepository = userRoomRepository;
   }
 
-  public async getAllRooms(phoneNumber: string): Promise<IServiceResponse> {
-    const rooms = await this.model.getAllRooms(phoneNumber);
+  public async findAllByPhoneNumber(phoneNumber: string): Promise<IServiceResponse> {
+    const rooms = await this.userRoomRepository.findAllByPhoneNumber(phoneNumber);
 
     // pega todos os contatos de dentro da room, exceto o próprio "phoneNumber"
     const filteredRoom = rooms.map(({ user1, user2 }) => {
@@ -22,5 +23,3 @@ class UserRoomService {
     return { success: true, message: 'Success', data: filteredRoom };
   }
 }
-
-export default UserRoomService;

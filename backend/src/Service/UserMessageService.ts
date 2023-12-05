@@ -1,19 +1,18 @@
-import UserMessageModel from '../Model/UserMessageModel';
 import { IServiceResponse } from '../Interface/UserInterface';
 import { decryptRoomId } from '../Utils/CryptoJs';
+import { IUserMessageRepository } from '../Interface/Repository/IUserMessageRepository';
+import { IUserMessageService } from '../Interface/Service/IUserMessageService';
 
-class UserMessageService {
-  private model: UserMessageModel;
+export class UserMessageService implements IUserMessageService {
+  private userMessageRepository: IUserMessageRepository;
 
-  constructor() {
-    this.model = new UserMessageModel;
+  constructor(userMessageRepository: IUserMessageRepository) {
+    this.userMessageRepository = userMessageRepository;
   }
 
-  public async getMessage(hashRoomId: string): Promise<IServiceResponse> {
+  public async getMessages(hashRoomId: string): Promise<IServiceResponse> {
     const roomId = decryptRoomId(hashRoomId);
-    const messages = await this.model.getMessages(roomId);
+    const messages = await this.userMessageRepository.findAllByRoomId(roomId);
     return { success: true, message: 'Success', data: messages };
   }
 }
-
-export default UserMessageService;
