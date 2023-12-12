@@ -1,19 +1,21 @@
 import { BadRequestException } from './../exception/http/BadRequestException';
-import { Response, Request, NextFunction } from 'express';
-import { IJwt } from '../Interface/Utils/IJwt';
+import { NextFunction, Request, Response } from 'express';
 import { ZodError, z } from 'zod';
+import { IJwt } from '../Interface/Utils/IJwt';
 import { UnauthorizedException } from '../exception/http/UnauthorizedException';
 
-export class AuthMiddleware {
+export class AuthController {
   private jwt: IJwt;
-
+    
   constructor(jwt: IJwt) {
     this.jwt = jwt;
   }
+    
 
   async validateToken(req: Request, res: Response, next: NextFunction) {
     const headers = req.headers;
     try {
+
       const authSchema = z.object({
         authorization: z.string(),
       });
@@ -22,8 +24,8 @@ export class AuthMiddleware {
 
       const token = (headers.authorization as string).replace('Bearer ', '');
 
-      if (this.jwt.verify(token)) {
-        return next();
+      if(this.jwt.verify(token)) {
+        return res.status(200).json({ success: true });
       }
 
       throw new UnauthorizedException('Token is invalid');
@@ -34,6 +36,6 @@ export class AuthMiddleware {
       }
       next(error);
     }
-
+        
   }
 }

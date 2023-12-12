@@ -19,7 +19,6 @@ const userMessageController = new UserMessageController(userMessageService);
 
 
 userRoomRouter.get('/message', [
-  (req: Request, res: Response, next: NextFunction) => authMiddleware.isTokenAvailable(req, res, next),
   (req: Request, res: Response, next: NextFunction) => authMiddleware.validateToken(req, res, next),
   (req: Request, res: Response, next: NextFunction) => userMessageController.getMessage(req, res, next)
 ]);

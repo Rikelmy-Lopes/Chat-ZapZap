@@ -12,14 +12,9 @@ export class UserController {
   public async login(req: Request, res: Response, next: NextFunction) {
     try {
       const { phoneNumber, password } = req.body;
-      const { success, message, data }  = await this.userService.validateUser(phoneNumber, password);
-      if (success) return res.status(200).json(data);
-      if (message === 'User not Found') {
-        return res.status(404).json({ message });
-      }
-      if (message === 'Password not Correct') {
-        return res.status(401).json({ message });
-      }
+      const data = await this.userService.login(phoneNumber, password);
+      return res.status(200).json(data);
+
     } catch (error) {
       next(error);
     }
@@ -38,10 +33,11 @@ export class UserController {
 
   public async register(req: Request, res: Response, next: NextFunction) {
     try {
+      
       const user = req.body as IUser;
-      const { success, data, message } = await this.userService.save(user);
-      if (success) return res.status(201).json(data);
-      return res.status(409).json({ message });
+      const data = await this.userService.register(user);
+      return res.status(201).json(data);
+
     } catch (error) {
       next(error);
     }
@@ -49,10 +45,11 @@ export class UserController {
 
   public async getUser(req: Request, res: Response, next: NextFunction) {
     try {
+
       const { phoneNumber } = req.params;
-      const { success, message, data } = await this.userService.findByPhoneNumber(phoneNumber);
-      if (success) return res.status(200).json(data);
-      return res.status(404).json({ message });
+      const data = await this.userService.findByPhoneNumber(phoneNumber);
+      return res.status(200).json(data);
+      
     } catch (error) {
       next(error);
     }

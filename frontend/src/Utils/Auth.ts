@@ -13,7 +13,8 @@ const validateToken = async (history: NavigateFunction): Promise<void> => {
     });
     return;
   }
-  catch(_error) {
+  catch(error) {
+    console.error(error);
     localStorage.removeItem('user');
     history('/login');
     return;

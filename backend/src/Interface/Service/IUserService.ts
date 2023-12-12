@@ -1,8 +1,8 @@
 import { IServiceResponse, IUser } from '../UserInterface';
 
 export interface IUserService {
-    validateUser(phoneNumber: string, password: string): Promise<IServiceResponse>
+    login(phoneNumber: string, password: string): Promise<unknown>
     validateToken(token: string): IServiceResponse
-    save(user: IUser): Promise<IServiceResponse>
-    findByPhoneNumber(phoneNumber: string): Promise<IServiceResponse>
+    register(user: IUser): Promise<unknown>
+    findByPhoneNumber(phoneNumber: string): Promise<unknown>
 }

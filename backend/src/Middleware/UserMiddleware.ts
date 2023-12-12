@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { z } from 'zod';
+import { ZodError, z } from 'zod';
+import { BadRequestException } from '../exception/http/BadRequestException';
 
 export class UserMiddleware {
 
@@ -46,7 +47,12 @@ export class UserMiddleware {
       });
 
       await phoneNumberSchema.parse(params);
+      next();
     } catch (error) {
+      if (error instanceof ZodError) {
+        const errorMessage = JSON.parse((error as Error).message);
+        return next(new BadRequestException(errorMessage));
+      }
       next(error);
     }
   }

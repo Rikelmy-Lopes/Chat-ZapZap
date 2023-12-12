@@ -38,11 +38,12 @@ function NewChat() {
     const host = import.meta.env.VITE_BACKEND_HOST;
     const { token }: IUser = JSON.parse(String(localStorage.getItem('user')));
     try {
-      await axios.get(`${host}/user/+${selectedCode}${toPhoneNumber}`, {
+      const data = await axios.get(`${host}/user/+${selectedCode}${toPhoneNumber}`, {
         headers: {
           Authorization: token
         }
       });
+      console.log(data)
       return true;
     } catch (error) {
       console.log(error);

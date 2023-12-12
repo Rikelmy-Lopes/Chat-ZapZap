@@ -3,6 +3,9 @@ import { IUserRepository } from '../Interface/Repository/IUserRepository';
 import { IUserService } from '../Interface/Service/IUserService';
 import { IBCrypt } from '../Interface/Utils/IBCrypt';
 import { IJwt } from '../Interface/Utils/IJwt';
+import { NotFoundException } from '../exception/http/NotFoundException';
+import { UnauthorizedException } from '../exception/http/UnauthorizedException';
+import { ConflictException } from '../exception/http/ConflictException';
 
 export class UserService implements IUserService {
   private userRepository: IUserRepository;
@@ -15,18 +18,17 @@ export class UserService implements IUserService {
     this.jwt = jwt;
   }
 
-  public async validateUser(phoneNumber: string, password: string): Promise<IServiceResponse> {
+  public async login(phoneNumber: string, password: string): Promise<unknown> {
     const result = await this.userRepository.findByPhoneNumber(phoneNumber);
     if (!result) {
-      return { success: false, message: 'User not Found'};
+      throw new NotFoundException('User not Found');
     }
-    if (await this.bcrypt.validate(password, result.password)) {
-      const { name, phoneNumber } = result;
-      const token = this.jwt.create({ name, phoneNumber });
-      return { success: true, message: 'Success', data: { name, phoneNumber, token }};
-    } else {
-      return { success: false, message: 'Password not Correct'};
+    if (!(await this.bcrypt.validate(password, result.password))) { 
+      throw new UnauthorizedException('Password is not Correct');
     }
+    const { name } = result;
+    const token = this.jwt.create({ name, phoneNumber });
+    return { name, phoneNumber, token };
   }
 
   public validateToken(token: string): IServiceResponse {
@@ -35,22 +37,24 @@ export class UserService implements IUserService {
     return { success: false, message: 'Invalid Token' };
   }
 
-  public async save(user: IUser): Promise<IServiceResponse> {
-    const userAlreadyExist = await this.userRepository.findByPhoneNumber(user.phoneNumber);
+  public async register(user: IUser): Promise<unknown> {
+    const retrievedUser = await this.userRepository.findByPhoneNumber(user.phoneNumber);
 
-    if (userAlreadyExist) return { success: false, message: 'User already Exist' };
+    if (retrievedUser) {
+      throw new ConflictException('User already Exist');
+    }
     const { name, phoneNumber } = await this.userRepository.save(user);
-    const result = { name, phoneNumber, token: this.jwt.create({ name, phoneNumber })};
-    return { success: true, message: 'Success', data: result };
+    const token = this.jwt.create({ name, phoneNumber });
+    return { name, phoneNumber, token };
   }
 
-  public async findByPhoneNumber(phoneNumber: string): Promise<IServiceResponse> {
-    const result = await this.userRepository.findByPhoneNumber(phoneNumber);
-
-    if (result) return { success: true, message: 'User Found', data: {
-      name: result.name,
-      phoneNumber: result.phoneNumber
-    } };
-    return {  success: false,  message: 'User not Found' };
+  public async findByPhoneNumber(phoneNumber: string): Promise<unknown> {
+    const user = await this.userRepository.findByPhoneNumber(phoneNumber);
+    if (!user) {
+      throw new NotFoundException('User not Found');
+    }
+    const { name } = user;
+    
+    return  { name, phoneNumber };
   }
 }
