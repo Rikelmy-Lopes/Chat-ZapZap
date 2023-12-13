@@ -1,14 +1,48 @@
 import { BadRequestException } from './../exception/http/BadRequestException';
 import { Response, Request, NextFunction } from 'express';
-import { IJwt } from '../Interface/Utils/IJwt';
 import { ZodError, z } from 'zod';
-import { UnauthorizedException } from '../exception/http/UnauthorizedException';
+import { IAuthMiddleware } from '../Interface/Middleware/IAuthMiddleware';
 
-export class AuthMiddleware {
-  private jwt: IJwt;
+export class AuthMiddleware implements IAuthMiddleware {
 
-  constructor(jwt: IJwt) {
-    this.jwt = jwt;
+  async login(req: Request, res: Response, next: NextFunction) {
+    try {
+      const user = req.body;
+      const loginSchema = z.object({
+        phoneNumber: z.string().min(9),
+        password: z.string().min(4),
+      });
+
+      await loginSchema.parseAsync(user);
+
+      next();
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const errorMessage = JSON.parse(error.message);
+        next(new BadRequestException(errorMessage));
+      }
+      next(error);
+    }
+  }
+
+  async register(req: Request, res: Response, next: NextFunction) {
+    try {
+      const user = req.body;
+      const userSchema = z.object({
+        name: z.string(),
+        password: z.string().min(4),
+        phoneNumber: z.string().min(9),
+      });
+
+      await userSchema.parseAsync(user);
+      next();
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const errorMessage = JSON.parse(error.message);
+        next(new BadRequestException(errorMessage));
+      }
+      next(error);
+    }
   }
 
   async validateToken(req: Request, res: Response, next: NextFunction) {
@@ -20,13 +54,7 @@ export class AuthMiddleware {
   
       await authSchema.parseAsync(headers);
 
-      const token = (headers.authorization as string).replace('Bearer ', '');
-
-      if (this.jwt.verify(token)) {
-        return next();
-      }
-
-      throw new UnauthorizedException('Token is invalid');
+      next();
     } catch (error) {
       if (error instanceof ZodError) {
         const errorMessage = JSON.parse(error.message);

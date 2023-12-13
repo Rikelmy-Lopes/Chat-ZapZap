@@ -1,7 +1,8 @@
 import { IUser } from '../UserInterface';
 
-export interface IUserService {
+
+export interface IAuthService {
     login(phoneNumber: string, password: string): Promise<unknown>
     register(user: IUser): Promise<unknown>
-    findByPhoneNumber(phoneNumber: string): Promise<unknown>
+    validateToken(token: string): void
 }

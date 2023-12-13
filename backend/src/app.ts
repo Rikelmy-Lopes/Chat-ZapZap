@@ -4,12 +4,15 @@ import { userRouter } from './Router/userRouter';
 import { userMessageRouter } from './Router/userMessageRouter';
 import { userRoomRouter } from './Router/userRoomRouter';
 import { ErrorMiddleware } from './Middleware/ErrorMiddleware';
+import { authRouter } from './Router/authRouter';
 
 const app = express();
 
 app.use(cors());
 
 app.use(express.json());
+
+app.use(authRouter);
 
 app.use(userRouter);
 

@@ -11,8 +11,8 @@ export class UserMessageController {
   public async getMessage(req: Request, res: Response, next: NextFunction) {
     try {
       const { hashroomid } = req.headers;
-      const { success, data } = await this.userMessageService.getMessages(String(hashroomid));
-      if (success) return res.status(200).json(data);
+      const data = await this.userMessageService.getMessages(String(hashroomid));
+      return res.status(200).json(data);
     } catch (error) {
       next(error);
     }

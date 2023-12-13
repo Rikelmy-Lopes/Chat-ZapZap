@@ -1,4 +1,3 @@
-import { IServiceResponse } from '../Interface/UserInterface';
 import { IUserRoomRepository } from '../Interface/Repository/IUserRoomRepository';
 import { IUserRoomService } from '../Interface/Service/IUserRoomService';
 
@@ -9,7 +8,7 @@ export class UserRoomService implements IUserRoomService {
     this.userRoomRepository = userRoomRepository;
   }
 
-  public async findAllByPhoneNumber(phoneNumber: string): Promise<IServiceResponse> {
+  public async findAllByPhoneNumber(phoneNumber: string): Promise<unknown> {
     const rooms = await this.userRoomRepository.findAllByPhoneNumber(phoneNumber);
 
     // pega todos os contatos de dentro da room, exceto o próprio "phoneNumber"
@@ -20,6 +19,6 @@ export class UserRoomService implements IUserRoomService {
       return user2;
     });
 
-    return { success: true, message: 'Success', data: filteredRoom };
+    return filteredRoom;
   }
 }

@@ -1,10 +1,3 @@
-export interface IServiceResponse {
-    success: boolean,
-    message: string
-    data?: unknown | undefined,
-
-}
-
 export interface IUser {
     name: string,
     password: string,

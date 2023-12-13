@@ -12,10 +12,9 @@ export class UserRoomController {
     try {
       const { phonenumber: phoneNumber } = req.headers;
 
-      const { success, data } = await this.userRoomService.findAllByPhoneNumber(String(phoneNumber));
-      if (success) {
-        return res.status(200).json(data);
-      } 
+      const data = await this.userRoomService.findAllByPhoneNumber(String(phoneNumber));
+      
+      return res.status(200).json(data);
     } catch (error) {
       next(error);
     }
